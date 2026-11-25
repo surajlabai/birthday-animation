@@ -9,42 +9,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-<!-- ============================================================
-     FIREBASE SDK (v10 modular, CDN se)
-     ============================================================ -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-  // ⬇️⬇️⬇️ YAHAN APNA FIREBASE CONFIG PASTE KARO ⬇️⬇️⬇️
-  const firebaseConfig = {
-    apiKey: "AIzaSyCqHcY1tRDB9cSyyEEd-o_eO7WmHD5C0zE",
-  authDomain: "surajpostfree.firebaseapp.com",
-  databaseURL: "https://surajpostfree-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "surajpostfree",
-  storageBucket: "surajpostfree.firebasestorage.app",
-  messagingSenderId: "13145319487",
-  appId: "1:13145319487:web:fad2ffe076db50a7a1308a",
-  measurementId: "G-WL7SJ6N90H"
-  };
-  // ⬆️⬆️⬆️ YAHAN TAK ⬆️⬆️⬆️
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  // Global helpers — baaki script inhe use karega
-  window.fbSaveWish = async (id, data) => {
-    await setDoc(doc(db, "wishes", id), data);
-  };
-  window.fbLoadWish = async (id) => {
-    const snap = await getDoc(doc(db, "wishes", id));
-    return snap.exists() ? snap.data() : null;
-  };
-  window.fbReady = true;
-  console.log("🔥 Firebase ready");
-</script>
-
 <style>
 /* ============================================================
    COLOR THEME
@@ -254,7 +218,7 @@ textarea { resize: vertical; min-height: 80px; }
 @keyframes letterIn { to { opacity: 1; filter: blur(0); transform: none; } }
 
 /* ============================================================
-   MISC, TOAST, MODALS & CUSTOMIZER
+   MISC, TOAST, MODALS & COUNT PICKER
    ============================================================ */
 .sound-btn, .back-btn {
   position: fixed; top: 24px; width: 48px; height: 48px;
@@ -315,23 +279,14 @@ textarea { resize: vertical; min-height: 80px; }
 .arrow-btn { width: 42px; height: 42px; border-radius: 10px; border: 1px solid var(--border); background: rgba(56,189,248,0.05); color: var(--accent); font-size: 18px; cursor: pointer; display: grid; place-items: center; transition: all 0.18s var(--ease); }
 .arrow-btn:hover { background: rgba(56,189,248,0.18); border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
 
-/* CUSTOMIZER SCREEN */
-.customizer-list { width: 100%; max-height: 50vh; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; padding-right: 8px; margin-bottom: 20px; text-align: left; }
-.customizer-list::-webkit-scrollbar { width: 6px; }
-.customizer-list::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
-.slide-item { background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 12px; padding: 16px; transition: all 0.3s ease; }
-.slide-item.disabled { opacity: 0.5; }
-.slide-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.slide-header h4 { color: var(--accent); font-size: 14px; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
-.toggle-switch { position: relative; display: inline-block; width: 40px; height: 22px; }
-.toggle-switch input { opacity: 0; width: 0; height: 0; }
-.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 34px; }
-.slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-input:checked + .slider { background-color: var(--primary); }
-input:checked + .slider:before { transform: translateX(18px); }
-.custom-inputs { display: flex; flex-direction: column; gap: 8px; }
-.custom-inputs input { font-size: 14px; padding: 10px; }
-.custom-inputs textarea { font-size: 14px; padding: 10px; min-height: 60px; }
+/* Count Picker */
+.count-display-wrap { display: flex; justify-content: center; align-items: center; gap: 24px; }
+.count-num { font-family: 'Playfair Display', serif; font-size: 4rem; font-weight: 600; color: var(--accent); line-height: 1; text-shadow: 0 0 30px var(--accent-glow); min-width: 80px; text-align: center; }
+.count-label { font-size: 11px; opacity: 0.7; margin-top: 4px; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; }
+.count-btn-big { width: 56px; height: 56px; font-size: 24px; }
+.quick-counts { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.quick-counts .btn-ghost { width: auto; flex: 0 0 auto; padding: 10px 18px; font-size: 13px; }
+.quick-counts .btn-ghost.active { border-color: var(--accent); background: rgba(56,189,248,0.15); box-shadow: 0 0 20px var(--accent-glow); }
 
 /* QR Modal specific */
 .qr-image { background: #fff; padding: 12px; border-radius: 12px; width: 250px; height: 250px; display: grid; place-items: center; overflow: hidden; }
@@ -345,7 +300,8 @@ input:checked + .slider:before { transform: translateX(18px); }
   .plant-container { width: 140px; height: 140px; }
   .adjust-circle-wrap { width: 180px; height: 180px; }
   .adjust-panel, .qr-panel { padding: 20px 16px; }
-  .customizer-list { max-height: 40vh; }
+  .count-num { font-size: 3rem; }
+  .count-btn-big { width: 48px; height: 48px; font-size: 20px; }
 }
 </style>
 </head>
@@ -383,13 +339,33 @@ input:checked + .slider:before { transform: translateX(18px); }
     </div>
   </section>
 
-  <!-- 0.5 · CUSTOMIZER -->
+  <!-- 0.5 · CARD COUNT PICKER -->
   <section class="screen" id="customizer">
-    <div class="panel" style="max-width: 800px;">
-      <h2 class="serif text-anim text-sky" style="font-size: 2rem; margin-bottom: 8px;">Customize Your Wish</h2>
-      <p class="text-anim" style="font-size: 13px; color: var(--accent); opacity: 0.8; margin-bottom: 24px; animation-delay: 0.2s;">Select slides and edit the messages as you like.</p>
-      <div class="customizer-list text-anim" id="customizerList" style="animation-delay: 0.3s;"></div>
-      <button class="btn-primary text-anim" id="startExperienceBtn" style="animation-delay: 0.4s;">Start Experience 🚀</button>
+    <div class="panel" style="max-width: 480px;">
+      <h2 class="serif text-anim text-sky" style="font-size: 2rem; margin-bottom: 8px;">How many cards?</h2>
+      <p class="text-anim" style="font-size: 13px; color: var(--accent); opacity: 0.8; margin-bottom: 24px; animation-delay: 0.2s;">
+        Choose how many message cards to include (1–16).
+      </p>
+
+      <div class="text-anim" style="animation-delay: 0.3s; display: flex; flex-direction: column; gap: 24px;">
+        <div class="count-display-wrap">
+          <button type="button" class="arrow-btn count-btn-big" id="countMinus">−</button>
+          <div>
+            <div class="count-num" id="countDisplay">16</div>
+            <div class="count-label">cards</div>
+          </div>
+          <button type="button" class="arrow-btn count-btn-big" id="countPlus">+</button>
+        </div>
+
+        <div class="quick-counts">
+          <button type="button" class="btn-ghost" data-count="4">4</button>
+          <button type="button" class="btn-ghost" data-count="8">8</button>
+          <button type="button" class="btn-ghost" data-count="12">12</button>
+          <button type="button" class="btn-ghost" data-count="16">16</button>
+        </div>
+      </div>
+
+      <button class="btn-primary text-anim" id="startExperienceBtn" style="animation-delay: 0.4s; margin-top: 28px;">Start Experience 🚀</button>
     </div>
   </section>
 
@@ -487,7 +463,7 @@ const rand  = (a, b) => a + Math.random() * (b - a);
 const pick  = (a) => a[(Math.random() * a.length) | 0];
 
 /* ============================================================
-   SLIDE DATA
+   SLIDE DATA (default messages, EN + HI)
    ============================================================ */
 const slideData = {
   4: { en: '"On This Beautiful Day, May your birthday be as bright as your smile and as beautiful as your heart — <span class="text-sky">you</span>."', hi: '"आपका जन्मदिन आपकी मुस्कान की तरह उज्ज्वल और आपके दिल की तरह सुंदर हो <span class="text-sky">आप</span>।"' },
@@ -508,13 +484,18 @@ const slideData = {
   19: { en: '"Life is full of problems... Problems are not permanent, life is limited, so face the problems with confidence and enjoy every moment of your life."', hi: '"ज़िंदगी प्रॉब्लम से भरी है... प्रॉब्लम परमानेंट नहीं होती, ज़िंदगी लिमिटेड है इसलिए प्रॉब्लम का कॉन्फिडेंस के साथ सामना करें और अपनी ज़िंदगी के हर पल को एन्जॉय करें।"' }
 };
 
-let activeSlides = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
-let customMessages = {};
+/* ============================================================
+   STATE
+   ============================================================ */
+let activeSlides = [];
 let currentStepIndex = -1;
 let currentName = '';
 let isTransitioning = false;
 let isRecipient = false;
-let shareId = null; // Firestore doc id
+let slideCount = 16;
+const MIN_CARDS = 1;
+const MAX_CARDS = 16;
+const SLIDE_START = 4;
 
 /* ============================================================
    BACKGROUND (HEARTS)
@@ -703,7 +684,7 @@ $('#photoInput').addEventListener('change', (e) => {
   canvas.addEventListener('pointerup', endDrag); canvas.addEventListener('pointercancel', endDrag);
 })();
 $('#zoomSlider').addEventListener('input', (e) => { adjustState.userScale = parseFloat(e.target.value); drawAdjustPreview(); });
-document.querySelectorAll('.arrow-btn').forEach((btn) => {
+document.querySelectorAll('.arrow-btn[data-dir]').forEach((btn) => {
   btn.addEventListener('click', (e) => {
     e.stopPropagation(); if (!adjustState.img) return; const step = 10;
     if (btn.dataset.dir === 'left') adjustState.offsetX -= step; if (btn.dataset.dir === 'right') adjustState.offsetX += step;
@@ -717,65 +698,39 @@ $('#saveAdjust').addEventListener('click', (e) => {
   drawAdjustPreview();
   const canvas = $('#adjustCanvas');
   currentPhoto = canvas.toDataURL('image/png');
-  // URL/Firestore ke liye chhota 128x128 JPEG (~4-6 KB)
-  const urlCanvas = document.createElement('canvas'); urlCanvas.width = 128; urlCanvas.height = 128;
-  urlCanvas.getContext('2d').drawImage(canvas, 0, 0, 128, 128);
-  shareablePhoto = urlCanvas.toDataURL('image/jpeg', 0.65);
+  const urlCanvas = document.createElement('canvas'); urlCanvas.width = 96; urlCanvas.height = 96;
+  urlCanvas.getContext('2d').drawImage(canvas, 0, 0, 96, 96);
+  shareablePhoto = urlCanvas.toDataURL('image/jpeg', 0.6);
   const previewImg = $('#photoPreviewImg'); previewImg.src = currentPhoto; previewImg.style.display = 'block'; $('#photoPreviewPlaceholder').style.display = 'none';
   updatePersistentProfile(currentPhoto); $('#adjustModal').classList.remove('show');
 });
 
 /* ============================================================
-   CUSTOMIZER
+   COUNT PICKER
    ============================================================ */
-function renderCustomizer() {
-  const list = $('#customizerList'); list.innerHTML = '';
-  for (let i = 4; i <= 19; i++) {
-    const isChecked = activeSlides.includes(i) ? 'checked' : '';
-    const disabledClass = isChecked ? '' : 'disabled';
-    const enText = customMessages[i] ? customMessages[i].en : slideData[i].en;
-    const hiText = customMessages[i] ? customMessages[i].hi : slideData[i].hi;
-    list.innerHTML += `
-      <div class="slide-item ${disabledClass}" id="custom-item-${i}">
-        <div class="slide-header">
-          <h4>Slide ${i}</h4>
-          <label class="toggle-switch">
-            <input type="checkbox" data-id="${i}" ${isChecked} class="slide-toggle">
-            <span class="slider"></span>
-          </label>
-        </div>
-        <div class="custom-inputs">
-          <textarea class="edit-en" data-id="${i}" placeholder="English Message">${enText.replace(/<[^>]*>/g, '')}</textarea>
-          <input type="text" class="edit-hi" data-id="${i}" placeholder="Hindi Message" value="${hiText.replace(/<[^>]*>/g, '').replace(/"/g, '&quot;')}">
-        </div>
-      </div>
-    `;
-  }
+function updateCountUI() {
+  $('#countDisplay').textContent = slideCount;
+  $$('.quick-counts [data-count]').forEach(b => {
+    const c = parseInt(b.dataset.count);
+    b.classList.toggle('active', c === slideCount);
+  });
 }
-$('#customizerList').addEventListener('change', (e) => {
-  if (e.target.classList.contains('slide-toggle')) {
-    const id = parseInt(e.target.dataset.id);
-    const item = $(`#custom-item-${id}`);
-    if (e.target.checked) {
-      if (!activeSlides.includes(id)) activeSlides.push(id);
-      item.classList.remove('disabled');
-    } else {
-      activeSlides = activeSlides.filter(s => s !== id);
-      item.classList.add('disabled');
-    }
-  }
+$('#countMinus').addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (slideCount > MIN_CARDS) { slideCount--; updateCountUI(); }
 });
-$('#customizerList').addEventListener('input', (e) => {
-  const id = parseInt(e.target.dataset.id);
-  if (e.target.classList.contains('edit-en')) {
-    if (!customMessages[id]) customMessages[id] = { ...slideData[id] };
-    customMessages[id].en = e.target.value;
-  }
-  if (e.target.classList.contains('edit-hi')) {
-    if (!customMessages[id]) customMessages[id] = { ...slideData[id] };
-    customMessages[id].hi = e.target.value;
-  }
+$('#countPlus').addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (slideCount < MAX_CARDS) { slideCount++; updateCountUI(); }
 });
+$$('.quick-counts [data-count]').forEach(b => {
+  b.addEventListener('click', (e) => {
+    e.stopPropagation();
+    slideCount = Math.max(MIN_CARDS, Math.min(MAX_CARDS, parseInt(b.dataset.count)));
+    updateCountUI();
+  });
+});
+updateCountUI();
 
 /* ============================================================
    MESSAGE RENDER (EN + HI dono)
@@ -786,57 +741,34 @@ function renderMessageTo(el, msg) {
 }
 function renderAllActiveMessages() {
   for (let i = 4; i <= 19; i++) {
-    if (activeSlides.includes(i)) {
-      const msg = customMessages[i] || slideData[i];
-      renderMessageTo($(`#msg${i}`), msg);
+    if (activeSlides.includes(i) && slideData[i]) {
+      renderMessageTo($(`#msg${i}`), slideData[i]);
     }
   }
 }
 
 /* ============================================================
-   START EXPERIENCE → FIREBASE SAVE
+   START EXPERIENCE
    ============================================================ */
-$('#startExperienceBtn').addEventListener('click', async (e) => {
+$('#startExperienceBtn').addEventListener('click', (e) => {
   e.stopPropagation();
-  if (activeSlides.length === 0) { toast('Please select at least one slide.'); return; }
-  if (!window.fbReady) { toast('Firebase not ready. Reload page.'); return; }
-
-  activeSlides.sort((a, b) => a - b);
+  const msgSlideIds = [];
+  for (let i = 0; i < slideCount; i++) {
+    msgSlideIds.push(SLIDE_START + i);
+  }
+  activeSlides = [1, 2, 3, ...msgSlideIds, 20].sort((a, b) => a - b);
   renderAllActiveMessages();
 
-  // Save to Firestore
-  const btn = e.currentTarget;
-  const originalText = btn.textContent;
-  btn.disabled = true; btn.textContent = 'Saving…';
+  const stateObj = { n: currentName, a: activeSlides };
+  if (shareablePhoto) stateObj.p = shareablePhoto;
+  const encoded = encodeURIComponent(JSON.stringify(stateObj));
+  history.replaceState(null, '', '?data=' + encoded);
 
-  try {
-    shareId = Math.random().toString(36).slice(2, 10);
-    const payload = {
-      n: currentName,
-      a: activeSlides,
-      m: customMessages,
-      createdAt: Date.now()
-    };
-    if (shareablePhoto) payload.p = shareablePhoto;
-
-    await window.fbSaveWish(shareId, payload);
-
-    // Chhota URL — QR ke liye perfect
-    const newUrl = `${location.origin}${location.pathname}?id=${shareId}`;
-    history.replaceState(null, '', '?id=' + shareId);
-
-    $('#customizer').classList.remove('on');
-    currentStepIndex = 0;
-    showScreen(activeSlides[0]);
-    updateBackBtn();
-    toast('Wish saved! Link ready to share ✨');
-  } catch (err) {
-    console.error('Save error:', err);
-    toast('Save failed: ' + (err.message || 'Unknown error'));
-    shareId = null;
-  } finally {
-    btn.disabled = false; btn.textContent = originalText;
-  }
+  $('#customizer').classList.remove('on');
+  currentStepIndex = 0;
+  showScreen(activeSlides[0]);
+  updateBackBtn();
+  toast('Your wish is ready! ✨');
 });
 
 /* ============================================================
@@ -847,7 +779,7 @@ function showScreen(id) {
   const panel = document.querySelector(`#step${id} .panel`);
   if (panel) panel.style.transform = '';
   const pp = $('#persistentProfile');
-  if (pp) pp.classList.toggle('visible', id !== 'creator' && id !== 'customizer');
+  if (pp) pp.classList.toggle('visible', id !== 1 && id !== 2 && id !== 3 ? true : id !== 'creator' && id !== 'customizer');
   setTimeout(() => {
     const msgEl = document.querySelector(`#step${id} .wish-message`);
     if (msgEl) adjustTextScale(msgEl);
@@ -861,9 +793,7 @@ function revealName(name) {
   });
 }
 function blowCandles() {
-  $$('.flame').forEach((f, i) => {
-    setTimeout(() => { f.classList.add('out'); }, i * 100);
-  });
+  $$('.flame').forEach((f, i) => { setTimeout(() => { f.classList.add('out'); }, i * 100); });
 }
 function resetCandles() { $$('.flame').forEach((f) => f.classList.remove('out')); }
 function updateBackBtn() {
@@ -890,9 +820,7 @@ function nextStep(e) {
   if (currentStepIndex === -1) return;
   if (currentStepIndex >= activeSlides.length) return;
   if ($('#adjustModal').classList.contains('show') || $('#qrModal').classList.contains('show')) return;
-
   playChime();
-
   const currentId = activeSlides[currentStepIndex];
   if (currentId === 3) {
     blowCandles(); isTransitioning = true;
@@ -931,7 +859,6 @@ function toast(msg) {
    SHARE + QR
    ============================================================ */
 function buildShareUrl() {
-  if (shareId) return `${location.origin}${location.pathname}?id=${shareId}`;
   return location.href;
 }
 async function shareWish() {
@@ -965,7 +892,7 @@ $('#closeQrBtn').addEventListener('click', (e) => { e.stopPropagation(); $('#qrM
 $('#qrModal').addEventListener('click', (e) => { if (e.target === e.currentTarget) $('#qrModal').classList.remove('show'); });
 
 /* ============================================================
-   FORM SUBMIT → CUSTOMIZER
+   FORM SUBMIT → COUNT PICKER
    ============================================================ */
 $('#createForm').addEventListener('submit', (e) => {
   e.preventDefault();
@@ -977,42 +904,28 @@ $('#createForm').addEventListener('submit', (e) => {
   updatePersistentProfile(currentPhoto);
   $('#creator').classList.remove('on');
   $('#customizer').classList.add('on');
-  renderCustomizer();
+  slideCount = 16;
+  updateCountUI();
 });
 
 /* ============================================================
-   BOOT — URL ?id= se load
+   BOOT
    ============================================================ */
-(async function boot() {
+(function boot() {
   updatePersistentProfile(null);
-
   const p = new URLSearchParams(location.search);
-  const wishId = p.get('id');
+  const dataParam = p.get('data');
 
-  if (wishId) {
+  if (dataParam) {
     isRecipient = true;
-    shareId = wishId;
     try {
-      if (!window.fbReady) {
-        // Firebase module abhi load nahi hua, thoda wait karo
-        await new Promise((res) => {
-          const t = setInterval(() => { if (window.fbReady) { clearInterval(t); res(); } }, 50);
-          setTimeout(() => { clearInterval(t); res(); }, 5000);
-        });
-      }
-      if (!window.fbReady) throw new Error('Firebase not loaded');
-
-      const data = await window.fbLoadWish(wishId);
-      if (!data) throw new Error('Wish not found');
-
-      currentName = data.n || 'Friend';
-      if (data.a && data.a.length > 0) activeSlides = data.a;
-      if (data.m) customMessages = data.m;
-      if (data.p) { currentPhoto = data.p; updatePersistentProfile(currentPhoto); }
+      const state = JSON.parse(decodeURIComponent(dataParam));
+      currentName = state.n || 'Friend';
+      if (state.a && state.a.length > 0) activeSlides = state.a;
+      if (state.p) { currentPhoto = state.p; updatePersistentProfile(currentPhoto); }
 
       renderAllActiveMessages();
 
-      // Final screen ke buttons recipient ke liye
       $('#finalActions').innerHTML = `
         <button class="btn-primary" id="againBtn">Create Your Own ✨</button>
       `;
@@ -1023,10 +936,8 @@ $('#createForm').addEventListener('submit', (e) => {
       showScreen(activeSlides[0]);
       updateBackBtn();
     } catch (err) {
-      console.error('Load error:', err);
-      toast('Wish not found or expired');
-      // Fallback: creator screen hi dikhao
-      $('#creator').classList.add('on');
+      console.error('Invalid data:', err);
+      toast('Wish not found');
     }
   }
 })();
