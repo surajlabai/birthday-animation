@@ -3,13 +3,48 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title> @surajprocreater Birthday Experience</title>
+<title>@surajprocreater Birthday Experience</title>
 <meta name="theme-color" content="#050508" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<!-- QR Code Library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<!-- ============================================================
+     FIREBASE SDK (v10 modular, CDN se)
+     ============================================================ -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  // ⬇️⬇️⬇️ YAHAN APNA FIREBASE CONFIG PASTE KARO ⬇️⬇️⬇️
+  const firebaseConfig = {
+    apiKey: "AIzaSyCqHcY1tRDB9cSyyEEd-o_eO7WmHD5C0zE",
+  authDomain: "surajpostfree.firebaseapp.com",
+  databaseURL: "https://surajpostfree-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "surajpostfree",
+  storageBucket: "surajpostfree.firebasestorage.app",
+  messagingSenderId: "13145319487",
+  appId: "1:13145319487:web:fad2ffe076db50a7a1308a",
+  measurementId: "G-WL7SJ6N90H"
+  };
+  // ⬆️⬆️⬆️ YAHAN TAK ⬆️⬆️⬆️
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Global helpers — baaki script inhe use karega
+  window.fbSaveWish = async (id, data) => {
+    await setDoc(doc(db, "wishes", id), data);
+  };
+  window.fbLoadWish = async (id) => {
+    const snap = await getDoc(doc(db, "wishes", id));
+    return snap.exists() ? snap.data() : null;
+  };
+  window.fbReady = true;
+  console.log("🔥 Firebase ready");
+</script>
+
 <style>
 /* ============================================================
    COLOR THEME
@@ -112,6 +147,7 @@ textarea { resize: vertical; min-height: 80px; }
 }
 .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 40px rgba(16, 185, 129, 0.6); }
 .btn-primary:active { transform: translateY(1px) scale(0.98); }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
 .btn-ghost {
   display: inline-flex; align-items: center; justify-content: center;
@@ -238,6 +274,7 @@ textarea { resize: vertical; min-height: 80px; }
   color: var(--primary); font-size: 14px; font-weight: 600;
   box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 24px var(--primary-glow);
   opacity: 0; pointer-events: none; transition: all 0.4s var(--ease);
+  max-width: 90vw; text-align: center;
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
@@ -314,13 +351,10 @@ input:checked + .slider:before { transform: translateX(18px); }
 </head>
 <body>
 
-<!-- Background (Only Hearts) -->
 <canvas id="bg-heart" class="bg-canvas active"></canvas>
-
 <button class="sound-btn" id="soundBtn" aria-label="Toggle sound">🔊</button>
 <button class="back-btn" id="backBtn" aria-label="Go back">←</button>
 
-<!-- Persistent Profile Circle -->
 <div class="persistent-profile" id="persistentProfile">
   <div class="pp-inner" id="ppInner">
     <svg class="ph-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
@@ -342,7 +376,7 @@ input:checked + .slider:before { transform: translateX(18px); }
             </div>
             <input type="file" id="photoInput" accept="image/*" style="display:none;">
           </div>
-          <input id="nameInput" type="text" placeholder="Enter name... @srajproceater" maxlength="20" spellcheck="false" />
+          <input id="nameInput" type="text" placeholder="Enter name..." maxlength="20" spellcheck="false" />
           <button type="submit" class="btn-primary">Create Magic ✨</button>
         </div>
       </form>
@@ -354,11 +388,7 @@ input:checked + .slider:before { transform: translateX(18px); }
     <div class="panel" style="max-width: 800px;">
       <h2 class="serif text-anim text-sky" style="font-size: 2rem; margin-bottom: 8px;">Customize Your Wish</h2>
       <p class="text-anim" style="font-size: 13px; color: var(--accent); opacity: 0.8; margin-bottom: 24px; animation-delay: 0.2s;">Select slides and edit the messages as you like.</p>
-      
-      <div class="customizer-list text-anim" id="customizerList" style="animation-delay: 0.3s;">
-        <!-- Dynamically populated by JS -->
-      </div>
-
+      <div class="customizer-list text-anim" id="customizerList" style="animation-delay: 0.3s;"></div>
       <button class="btn-primary text-anim" id="startExperienceBtn" style="animation-delay: 0.4s;">Start Experience 🚀</button>
     </div>
   </section>
@@ -384,67 +414,22 @@ input:checked + .slider:before { transform: translateX(18px); }
     </div>
   </section>
 
-  <!-- DYNAMIC MESSAGE SLIDES (Step 4 to 19) -->
-  <section class="screen" id="step4">
-    <div class="plant-container top-left"><svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--primary)" stroke-width="2"><path class="vine" d="M50 90 Q50 50 50 30 M50 50 Q30 40 20 20 M50 50 Q70 40 80 20" stroke-linecap="round"/><circle class="petal" cx="50" cy="30" r="8" fill="rgba(16,185,129,0.2)"/><circle class="petal" cx="20" cy="20" r="6" fill="rgba(16,185,129,0.2)"/><circle class="petal" cx="80" cy="20" r="6" fill="rgba(16,185,129,0.2)"/></svg></div>
-    <div class="panel"><h2 class="wish-message text-anim" id="msg4"></h2></div>
-  </section>
-  
-  <section class="screen" id="step5">
-    <div class="plant-container bottom-right"><svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="2"><circle class="petal" cx="50" cy="50" r="30" stroke-dasharray="10 10"/><path class="vine" d="M50 20 L50 80 M20 50 L80 50" stroke-linecap="round"/></svg></div>
-    <div class="panel"><h2 class="wish-message text-anim" id="msg5"></h2></div>
-  </section>
-  
-  <section class="screen" id="step6">
-    <div class="plant-container center-bg"><svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--primary)" stroke-width="1"><circle class="petal" cx="50" cy="50" r="40"/><circle class="petal" cx="50" cy="50" r="25"/><circle class="petal" cx="50" cy="50" r="10" fill="var(--primary)"/></svg></div>
-    <div class="panel"><h2 class="wish-message text-anim" id="msg6"></h2></div>
-  </section>
-  
-  <section class="screen" id="step7">
-    <div class="plant-container top-left"><svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="2"><path class="vine" d="M50 90 C50 50 20 50 20 20 C40 20 50 50 50 50 C50 50 60 20 80 20 C80 50 50 50 50 90Z" fill="rgba(56,189,248,0.1)"/></svg></div>
-    <div class="panel"><h2 class="wish-message text-anim" id="msg7"></h2></div>
-  </section>
-  
-  <section class="screen" id="step8">
-    <div class="plant-container bottom-right"><svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--primary)" stroke-width="2"><path class="vine" d="M50 10 L90 50 L50 90 L10 50 Z" stroke-linejoin="round"/><path class="leaf" d="M50 30 L70 50 L50 70 L30 50 Z" fill="rgba(16,185,129,0.2)"/></svg></div>
-    <div class="panel"><h2 class="wish-message text-anim" id="msg8"></h2></div>
-  </section>
-
+  <!-- MESSAGE SLIDES 4-19 -->
+  <section class="screen" id="step4"><div class="plant-container top-left"><svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--primary)" stroke-width="2"><path class="vine" d="M50 90 Q50 50 50 30 M50 50 Q30 40 20 20 M50 50 Q70 40 80 20" stroke-linecap="round"/><circle class="petal" cx="50" cy="30" r="8" fill="rgba(16,185,129,0.2)"/><circle class="petal" cx="20" cy="20" r="6" fill="rgba(16,185,129,0.2)"/><circle class="petal" cx="80" cy="20" r="6" fill="rgba(16,185,129,0.2)"/></svg></div><div class="panel"><h2 class="wish-message text-anim" id="msg4"></h2></div></section>
+  <section class="screen" id="step5"><div class="plant-container bottom-right"><svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="2"><circle class="petal" cx="50" cy="50" r="30" stroke-dasharray="10 10"/><path class="vine" d="M50 20 L50 80 M20 50 L80 50" stroke-linecap="round"/></svg></div><div class="panel"><h2 class="wish-message text-anim" id="msg5"></h2></div></section>
+  <section class="screen" id="step6"><div class="plant-container center-bg"><svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--primary)" stroke-width="1"><circle class="petal" cx="50" cy="50" r="40"/><circle class="petal" cx="50" cy="50" r="25"/><circle class="petal" cx="50" cy="50" r="10" fill="var(--primary)"/></svg></div><div class="panel"><h2 class="wish-message text-anim" id="msg6"></h2></div></section>
+  <section class="screen" id="step7"><div class="plant-container top-left"><svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="2"><path class="vine" d="M50 90 C50 50 20 50 20 20 C40 20 50 50 50 50 C50 50 60 20 80 20 C80 50 50 50 50 90Z" fill="rgba(56,189,248,0.1)"/></svg></div><div class="panel"><h2 class="wish-message text-anim" id="msg7"></h2></div></section>
+  <section class="screen" id="step8"><div class="plant-container bottom-right"><svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--primary)" stroke-width="2"><path class="vine" d="M50 10 L90 50 L50 90 L10 50 Z" stroke-linejoin="round"/><path class="leaf" d="M50 30 L70 50 L50 70 L30 50 Z" fill="rgba(16,185,129,0.2)"/></svg></div><div class="panel"><h2 class="wish-message text-anim" id="msg8"></h2></div></section>
   <section class="screen" id="step9"><div class="panel"><h2 class="wish-message text-anim" id="msg9"></h2></div></section>
-  
-  <section class="screen" id="step10">
-    <div class="plant-container top-left"><svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="2"><circle class="petal" cx="50" cy="50" r="20" fill="rgba(56,189,248,0.1)"/><path class="vine" d="M50 10 L50 30 M50 70 L50 90 M10 50 L30 50 M70 50 L90 50" stroke-linecap="round"/></svg></div>
-    <div class="panel"><h2 class="wish-message text-anim" id="msg10"></h2></div>
-  </section>
-
+  <section class="screen" id="step10"><div class="plant-container top-left"><svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="2"><circle class="petal" cx="50" cy="50" r="20" fill="rgba(56,189,248,0.1)"/><path class="vine" d="M50 10 L50 30 M50 70 L50 90 M10 50 L30 50 M70 50 L90 50" stroke-linecap="round"/></svg></div><div class="panel"><h2 class="wish-message text-anim" id="msg10"></h2></div></section>
   <section class="screen" id="step11"><div class="panel"><h2 class="wish-message text-anim" id="msg11"></h2></div></section>
-
-  <section class="screen" id="step12">
-    <div class="plant-container bottom-right"><svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--primary)" stroke-width="3"><path class="vine" d="M50 90 Q50 60 20 40 Q50 30 50 10 Q50 30 80 40 Q50 60 50 90" fill="rgba(16,185,129,0.15)"/></svg></div>
-    <div class="panel"><h2 class="wish-message text-anim" id="msg12"></h2></div>
-  </section>
-
+  <section class="screen" id="step12"><div class="plant-container bottom-right"><svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--primary)" stroke-width="3"><path class="vine" d="M50 90 Q50 60 20 40 Q50 30 50 10 Q50 30 80 40 Q50 60 50 90" fill="rgba(16,185,129,0.15)"/></svg></div><div class="panel"><h2 class="wish-message text-anim" id="msg12"></h2></div></section>
   <section class="screen" id="step13"><div class="panel"><h2 class="wish-message text-anim" id="msg13"></h2></div></section>
-
-  <section class="screen" id="step14">
-    <div class="plant-container top-left"><svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="2"><path class="vine" d="M10 90 Q30 70 50 50 Q70 30 90 10" stroke-linecap="round"/><circle class="petal" cx="30" cy="70" r="4" fill="var(--accent)"/><circle class="petal" cx="70" cy="30" r="4" fill="var(--accent)"/></svg></div>
-    <div class="panel"><h2 class="wish-message text-anim" id="msg14"></h2></div>
-  </section>
-
+  <section class="screen" id="step14"><div class="plant-container top-left"><svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="2"><path class="vine" d="M10 90 Q30 70 50 50 Q70 30 90 10" stroke-linecap="round"/><circle class="petal" cx="30" cy="70" r="4" fill="var(--accent)"/><circle class="petal" cx="70" cy="30" r="4" fill="var(--accent)"/></svg></div><div class="panel"><h2 class="wish-message text-anim" id="msg14"></h2></div></section>
   <section class="screen" id="step15"><div class="panel"><h2 class="wish-message text-anim" id="msg15"></h2></div></section>
-
-  <section class="screen" id="step16">
-    <div class="plant-container bottom-right"><svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--primary)" stroke-width="2"><polygon class="vine" points="50,10 90,50 50,90 10,50" fill="rgba(16,185,129,0.1)"/></svg></div>
-    <div class="panel"><h2 class="wish-message text-anim" id="msg16"></h2></div>
-  </section>
-
+  <section class="screen" id="step16"><div class="plant-container bottom-right"><svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--primary)" stroke-width="2"><polygon class="vine" points="50,10 90,50 50,90 10,50" fill="rgba(16,185,129,0.1)"/></svg></div><div class="panel"><h2 class="wish-message text-anim" id="msg16"></h2></div></section>
   <section class="screen" id="step17"><div class="panel"><h2 class="wish-message text-anim" id="msg17"></h2></div></section>
-
-  <section class="screen" id="step18">
-    <div class="plant-container center-bg"><svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="1"><circle class="petal" cx="50" cy="50" r="45" stroke-dasharray="5 5"/><circle class="petal" cx="50" cy="50" r="35"/><circle class="petal" cx="50" cy="50" r="25"/></svg></div>
-    <div class="panel"><h2 class="wish-message text-anim" id="msg18"></h2></div>
-  </section>
-
+  <section class="screen" id="step18"><div class="plant-container center-bg"><svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="1"><circle class="petal" cx="50" cy="50" r="45" stroke-dasharray="5 5"/><circle class="petal" cx="50" cy="50" r="35"/><circle class="petal" cx="50" cy="50" r="25"/></svg></div><div class="panel"><h2 class="wish-message text-anim" id="msg18"></h2></div></section>
   <section class="screen" id="step19"><div class="panel"><h2 class="wish-message text-anim" id="msg19"></h2></div></section>
 
   <!-- 20 · FINALE -->
@@ -456,7 +441,7 @@ input:checked + .slider:before { transform: translateX(18px); }
       <p class="wish-message text-anim" style="animation-delay: 0.3s; margin-bottom: 48px;">Happy Birthday.<span class="hindi">जन्मदिन मुबारक हो।</span></p>
       <div class="actions text-anim" id="finalActions" style="animation-delay: 0.5s; display: flex; flex-direction: column; gap: 16px;">
         <button class="btn-primary" id="shareBtn">Share this wish 🔗</button>
-        <button class="btn-ghost" id="againBtn" style="display: none;">Create Your Own ✨</button>
+        <button class="btn-ghost" id="qrBtn">Show QR Code 📱</button>
       </div>
     </div>
   </section>
@@ -483,6 +468,16 @@ input:checked + .slider:before { transform: translateX(18px); }
   </div>
 </div>
 
+<!-- QR Modal -->
+<div class="qr-overlay" id="qrModal">
+  <div class="qr-panel">
+    <h3 class="qr-title">Scan to view Wish</h3>
+    <div class="qr-image" id="qrContainer"></div>
+    <p style="font-size: 12px; text-align: center; color: var(--accent); opacity: 0.7;">Scan this code with any phone camera to open the experience.</p>
+    <button type="button" class="btn-primary" id="closeQrBtn" style="margin-top: 8px;">Close</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -492,12 +487,12 @@ const rand  = (a, b) => a + Math.random() * (b - a);
 const pick  = (a) => a[(Math.random() * a.length) | 0];
 
 /* ============================================================
-   DATA & STATE (Slide Customization)
+   SLIDE DATA
    ============================================================ */
 const slideData = {
   4: { en: '"On This Beautiful Day, May your birthday be as bright as your smile and as beautiful as your heart — <span class="text-sky">you</span>."', hi: '"आपका जन्मदिन आपकी मुस्कान की तरह उज्ज्वल और आपके दिल की तरह सुंदर हो <span class="text-sky">आप</span>।"' },
   5: { en: '"May your year overflow with laughter that never fades, and dreams that gently <span class="text-sky">come true</span>."', hi: '"आपका साल ऐसी हँसी से भरा रहे जो कभी फीकी न पड़े, और सपने धीरे-धीरे <span class="text-sky">सच होते रहें</span>।"' },
-  6: { en: '"The sweetest part of a birthday isn\'t the gifts. It\'s knowing that someone stayed up until 12 a.m. to make you feel special first."', hi: '"जन्मदिन का सबसे प्यारा हिस्सा तोहफ़े नहीं हैं। यह जानना है कि कोई आपको सबसे पहले खास महसूस कराने के लिए रात 12 बजे तक जागता रहा। "' },
+  6: { en: '"The sweetest part of a birthday isn\'t the gifts. It\'s knowing that someone stayed up until 12 a.m. to make you feel special first."', hi: '"जन्मदिन का सबसे प्यारा हिस्सा तोहफ़े नहीं हैं। यह जानना है कि कोई आपको सबसे पहले खास महसूस कराने के लिए रात 12 बजे तक जागता रहा।"' },
   7: { en: '"Another year has passed... I\'ve met some people, and I\'ve left some memories. I just hope the next journey is even better. Happy birthday to my friend."', hi: '"एक और साल गुज़र गया... कुछ लोग मिले, कुछ यादें रह गईं। बस दुआ है, अगला सफ़र और बेहतर हो। मेरे दोस्त को जन्मदिन की बधाई"' },
   8: { en: '"Everything is beautiful, depending on the situation. The school bell sounds annoying at 9 a.m., but the same bell sounds melodious at 4 p.m."', hi: '"सब कुछ सुंदर है, यह स्थिति पर निर्भर करता है। स्कूल की घंटी सुबह 9 बजे परेशान करने वाली लगती है, लेकिन वही घंटी शाम 4 बजे सुरीली लगती है।"' },
   9: { en: '"You don\'t have to be perfect in everyone\'s lives. Just be the best version of yourself."', hi: '"आपको हर किसी की ज़िंदगी में परफेक्ट होने की ज़रूरत नहीं है। बस खुद का बेस्ट वर्ज़न बनें"' },
@@ -514,15 +509,17 @@ const slideData = {
 };
 
 let activeSlides = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
-let customMessages = {}; 
+let customMessages = {};
+let currentStepIndex = -1;
+let currentName = '';
+let isTransitioning = false;
+let isRecipient = false;
+let shareId = null; // Firestore doc id
 
 /* ============================================================
-   BACKGROUND ANIMATION (HEARTS)
+   BACKGROUND (HEARTS)
    ============================================================ */
-const bgCanvasIds = ['bg-heart'];
-let bgAnimations = {};
-
-bgAnimations['bg-heart'] = function() {
+function initHeartBg() {
   const canvas = document.getElementById("bg-heart");
   const ctx = canvas.getContext("2d");
   let W = 0, H = 0, animId;
@@ -533,7 +530,7 @@ bgAnimations['bg-heart'] = function() {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
   resize(); window.addEventListener("resize", resize);
-  
+
   function drawHeart(cx, cy, s, fill, glow, blur = 12) {
     ctx.save(); ctx.translate(cx, cy);
     ctx.shadowBlur = blur; ctx.shadowColor = glow; ctx.fillStyle = fill;
@@ -573,31 +570,19 @@ bgAnimations['bg-heart'] = function() {
     animId = requestAnimationFrame(loop);
   }
   loop();
-  return () => cancelAnimationFrame(animId);
-};
-
-let bgCleanup = null;
-function setBackground() {
-  document.getElementById('bg-heart').classList.add('active');
-  bgCleanup = bgAnimations['bg-heart']();
 }
+initHeartBg();
 
 /* ============================================================
    TEXT AUTO-SCALING
    ============================================================ */
 function adjustTextScale(el) {
   if (!el) return;
-  const container = el.closest('.panel');
-  if (!container) return;
-  
-  el.style.fontSize = ''; // Reset
-  const maxPanelHeight = window.innerHeight * 0.7; 
-  const textHeight = el.scrollHeight + 100;
-  
-  if (textHeight > maxPanelHeight) {
+  el.style.fontSize = '';
+  const maxPanelHeight = window.innerHeight * 0.7;
+  if (el.scrollHeight + 100 > maxPanelHeight) {
     let currentSize = parseFloat(window.getComputedStyle(el).fontSize);
     const minSize = 12;
-    
     while (el.scrollHeight + 100 > maxPanelHeight && currentSize > minSize) {
       currentSize -= 1;
       el.style.fontSize = currentSize + 'px';
@@ -606,7 +591,7 @@ function adjustTextScale(el) {
 }
 
 /* ============================================================
-   AUDIO SYSTEM
+   AUDIO
    ============================================================ */
 let audioCtx = null, masterGain = null, isMuted = false;
 let bgMusicInterval = null; let musicStep = 0;
@@ -624,7 +609,6 @@ function ensureAudio() {
   if (audioCtx.state === 'suspended') audioCtx.resume();
   if (!bgMusicInterval) startMusic();
 }
-
 function playTone(freq, time, duration, type = 'sine', vol = 0.5) {
   if (!audioCtx) return;
   const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); const filter = audioCtx.createBiquadFilter();
@@ -634,22 +618,20 @@ function playTone(freq, time, duration, type = 'sine', vol = 0.5) {
   osc.connect(filter); filter.connect(gain); gain.connect(masterGain);
   osc.start(time); osc.stop(time + duration + 0.1);
 }
-
 function startMusic() {
   if (musicStep !== 0) return;
   const scheduleNext = () => {
     if (!audioCtx || isMuted) return;
     const time = audioCtx.currentTime + 0.1;
     const noteFreq = MELODY_NOTES[musicStep % MELODY_NOTES.length];
-    playTone(noteFreq, time, 1.5, 'sine', 0.2); 
+    playTone(noteFreq, time, 1.5, 'sine', 0.2);
     if (musicStep % 4 === 0) playTone(BASS_NOTES[Math.floor(musicStep / 4) % BASS_NOTES.length], time, 2.5, 'triangle', 0.15);
     if (musicStep % 8 === 4) playTone(noteFreq * 2, time + 0.1, 1.0, 'sine', 0.1);
     musicStep++;
-    bgMusicInterval = setTimeout(scheduleNext, 350); 
+    bgMusicInterval = setTimeout(scheduleNext, 350);
   };
   scheduleNext();
 }
-
 function playChime() {
   if (!audioCtx || isMuted) return;
   const osc = audioCtx.createOscillator(); const g = audioCtx.createGain();
@@ -657,7 +639,6 @@ function playChime() {
   g.gain.setValueAtTime(0.15, audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
   osc.connect(g); g.connect(masterGain); osc.start(); osc.stop(audioCtx.currentTime + 1.5);
 }
-
 document.addEventListener('click', ensureAudio, { once: true });
 $('#soundBtn').addEventListener('click', (e) => {
   e.stopPropagation(); isMuted = !isMuted;
@@ -678,7 +659,6 @@ function updatePersistentProfile(photoUrl) {
   const el = $('#ppInner'); if (!el) return;
   el.innerHTML = photoUrl ? `<img src="${photoUrl}" alt="Profile">` : PROFILE_FALLBACK;
 }
-
 function drawAdjustPreview() {
   const canvas = $('#adjustCanvas'); const ctx = canvas.getContext('2d');
   canvas.width = ADJUST_SIZE; canvas.height = ADJUST_SIZE;
@@ -709,7 +689,6 @@ $('#photoInput').addEventListener('change', (e) => {
   };
   reader.readAsDataURL(file); e.target.value = '';
 });
-
 (function() {
   const canvas = $('#adjustCanvas'); let dragging = false, startX, startY, startOffX, startOffY;
   canvas.addEventListener('pointerdown', (e) => {
@@ -723,7 +702,6 @@ $('#photoInput').addEventListener('change', (e) => {
   const endDrag = (e) => { if (!dragging) return; dragging = false; try { canvas.releasePointerCapture(e.pointerId); } catch (_) {} };
   canvas.addEventListener('pointerup', endDrag); canvas.addEventListener('pointercancel', endDrag);
 })();
-
 $('#zoomSlider').addEventListener('input', (e) => { adjustState.userScale = parseFloat(e.target.value); drawAdjustPreview(); });
 document.querySelectorAll('.arrow-btn').forEach((btn) => {
   btn.addEventListener('click', (e) => {
@@ -733,19 +711,22 @@ document.querySelectorAll('.arrow-btn').forEach((btn) => {
     drawAdjustPreview();
   });
 });
-
 $('#cancelAdjust').addEventListener('click', (e) => { e.stopPropagation(); $('#adjustModal').classList.remove('show'); });
 $('#saveAdjust').addEventListener('click', (e) => {
   e.stopPropagation(); if (!adjustState.img) return;
-  drawAdjustPreview(); const canvas = $('#adjustCanvas'); const dataUrl = canvas.toDataURL('image/png'); currentPhoto = dataUrl;
-  const urlCanvas = document.createElement('canvas'); urlCanvas.width = 120; urlCanvas.height = 120;
-  urlCanvas.getContext('2d').drawImage(canvas, 0, 0, 120, 120); shareablePhoto = urlCanvas.toDataURL('image/jpeg', 0.6);
-  const previewImg = $('#photoPreviewImg'); previewImg.src = dataUrl; previewImg.style.display = 'block'; $('#photoPreviewPlaceholder').style.display = 'none';
+  drawAdjustPreview();
+  const canvas = $('#adjustCanvas');
+  currentPhoto = canvas.toDataURL('image/png');
+  // URL/Firestore ke liye chhota 128x128 JPEG (~4-6 KB)
+  const urlCanvas = document.createElement('canvas'); urlCanvas.width = 128; urlCanvas.height = 128;
+  urlCanvas.getContext('2d').drawImage(canvas, 0, 0, 128, 128);
+  shareablePhoto = urlCanvas.toDataURL('image/jpeg', 0.65);
+  const previewImg = $('#photoPreviewImg'); previewImg.src = currentPhoto; previewImg.style.display = 'block'; $('#photoPreviewPlaceholder').style.display = 'none';
   updatePersistentProfile(currentPhoto); $('#adjustModal').classList.remove('show');
 });
 
 /* ============================================================
-   CUSTOMIZER LOGIC
+   CUSTOMIZER
    ============================================================ */
 function renderCustomizer() {
   const list = $('#customizerList'); list.innerHTML = '';
@@ -754,7 +735,6 @@ function renderCustomizer() {
     const disabledClass = isChecked ? '' : 'disabled';
     const enText = customMessages[i] ? customMessages[i].en : slideData[i].en;
     const hiText = customMessages[i] ? customMessages[i].hi : slideData[i].hi;
-    
     list.innerHTML += `
       <div class="slide-item ${disabledClass}" id="custom-item-${i}">
         <div class="slide-header">
@@ -766,13 +746,12 @@ function renderCustomizer() {
         </div>
         <div class="custom-inputs">
           <textarea class="edit-en" data-id="${i}" placeholder="English Message">${enText.replace(/<[^>]*>/g, '')}</textarea>
-          <input type="text" class="edit-hi" data-id="${i}" placeholder="Hindi Message" value="${hiText.replace(/<[^>]*>/g, '')}">
+          <input type="text" class="edit-hi" data-id="${i}" placeholder="Hindi Message" value="${hiText.replace(/<[^>]*>/g, '').replace(/"/g, '&quot;')}">
         </div>
       </div>
     `;
   }
 }
-
 $('#customizerList').addEventListener('change', (e) => {
   if (e.target.classList.contains('slide-toggle')) {
     const id = parseInt(e.target.dataset.id);
@@ -786,7 +765,6 @@ $('#customizerList').addEventListener('change', (e) => {
     }
   }
 });
-
 $('#customizerList').addEventListener('input', (e) => {
   const id = parseInt(e.target.dataset.id);
   if (e.target.classList.contains('edit-en')) {
@@ -799,64 +777,82 @@ $('#customizerList').addEventListener('input', (e) => {
   }
 });
 
-$('#startExperienceBtn').addEventListener('click', (e) => {
-  e.stopPropagation();
-  if (activeSlides.length === 0) {
-    toast('Please select at least one slide.');
-    return;
-  }
-  
-  activeSlides.sort((a, b) => a - b);
-  
-  // Apply messages to DOM
+/* ============================================================
+   MESSAGE RENDER (EN + HI dono)
+   ============================================================ */
+function renderMessageTo(el, msg) {
+  if (!el || !msg) return;
+  el.innerHTML = `${msg.en}<span class="hindi">${msg.hi}</span>`;
+}
+function renderAllActiveMessages() {
   for (let i = 4; i <= 19; i++) {
     if (activeSlides.includes(i)) {
       const msg = customMessages[i] || slideData[i];
-      $(`#msg${i}`).innerHTML = `"${msg.en.replace(/<[^>]*>/g, '')}" <span class="hindi">"${msg.hi.replace(/<[^>]*>/g, '')}"</span>`;
+      renderMessageTo($(`#msg${i}`), msg);
     }
   }
-  
-  // Build the URL state
-  const stateObj = {
-    n: currentName,
-    p: shareablePhoto,
-    a: activeSlides,
-    m: customMessages
-  };
-  const encodedData = encodeURIComponent(JSON.stringify(stateObj));
-  history.replaceState(null, '', '?data=' + encodedData);
+}
 
-  $('#customizer').classList.remove('on');
-  currentStepIndex = 0;
-  setBackground();
-  showScreen(activeSlides[0]);
-  updateBackBtn();
-  if (window.burstParticles) window.burstParticles(window.innerWidth/2, window.innerHeight/2, 100, 15);
+/* ============================================================
+   START EXPERIENCE → FIREBASE SAVE
+   ============================================================ */
+$('#startExperienceBtn').addEventListener('click', async (e) => {
+  e.stopPropagation();
+  if (activeSlides.length === 0) { toast('Please select at least one slide.'); return; }
+  if (!window.fbReady) { toast('Firebase not ready. Reload page.'); return; }
+
+  activeSlides.sort((a, b) => a - b);
+  renderAllActiveMessages();
+
+  // Save to Firestore
+  const btn = e.currentTarget;
+  const originalText = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Saving…';
+
+  try {
+    shareId = Math.random().toString(36).slice(2, 10);
+    const payload = {
+      n: currentName,
+      a: activeSlides,
+      m: customMessages,
+      createdAt: Date.now()
+    };
+    if (shareablePhoto) payload.p = shareablePhoto;
+
+    await window.fbSaveWish(shareId, payload);
+
+    // Chhota URL — QR ke liye perfect
+    const newUrl = `${location.origin}${location.pathname}?id=${shareId}`;
+    history.replaceState(null, '', '?id=' + shareId);
+
+    $('#customizer').classList.remove('on');
+    currentStepIndex = 0;
+    showScreen(activeSlides[0]);
+    updateBackBtn();
+    toast('Wish saved! Link ready to share ✨');
+  } catch (err) {
+    console.error('Save error:', err);
+    toast('Save failed: ' + (err.message || 'Unknown error'));
+    shareId = null;
+  } finally {
+    btn.disabled = false; btn.textContent = originalText;
+  }
 });
 
 /* ============================================================
    SLIDE CONTROLLER
    ============================================================ */
-let currentStepIndex = -1;
-let currentName = '';
-let isTransitioning = false;
-let isRecipient = false;
-
 function showScreen(id) {
   $$('.screen').forEach((s) => s.classList.toggle('on', s.id === 'step' + id));
   const panel = document.querySelector(`#step${id} .panel`);
   if (panel) panel.style.transform = '';
-  
   const pp = $('#persistentProfile');
   if (pp) pp.classList.toggle('visible', id !== 'creator' && id !== 'customizer');
-  
-  // Auto scale text
   setTimeout(() => {
     const msgEl = document.querySelector(`#step${id} .wish-message`);
     if (msgEl) adjustTextScale(msgEl);
   }, 100);
 }
-
 function revealName(name) {
   const el = $('#nameBig'); el.innerHTML = '';
   [...name].forEach((ch, i) => {
@@ -864,34 +860,24 @@ function revealName(name) {
     span.style.animationDelay = (i * 0.08) + 's'; el.appendChild(span);
   });
 }
-
 function blowCandles() {
   $$('.flame').forEach((f, i) => {
-    const r = f.getBoundingClientRect();
-    setTimeout(() => {
-      f.classList.add('out');
-      if (window.burstParticles) window.burstParticles(r.left + r.width / 2, r.top + r.height / 2, 30, 8);
-    }, i * 100);
+    setTimeout(() => { f.classList.add('out'); }, i * 100);
   });
 }
 function resetCandles() { $$('.flame').forEach((f) => f.classList.remove('out')); }
-
 function updateBackBtn() {
   const btn = $('#backBtn'); if (!btn) return;
   btn.classList.toggle('visible', currentStepIndex > 0);
 }
-
 function goBack(e) {
   if (e) e.stopPropagation();
   if (isTransitioning) return;
   if (currentStepIndex <= 0) return;
-
   currentStepIndex--;
   const id = activeSlides[currentStepIndex];
-  
   if (id === 3) resetCandles();
   if (id === 2) revealName(currentName);
-
   showScreen(id);
   playChime();
   updateBackBtn();
@@ -900,15 +886,11 @@ $('#backBtn').addEventListener('click', goBack);
 
 function nextStep(e) {
   if (isTransitioning) return;
-  if (e && e.target.closest('button, input, a')) return;
+  if (e && e.target.closest('button, input, a, textarea, label')) return;
   if (currentStepIndex === -1) return;
   if (currentStepIndex >= activeSlides.length) return;
   if ($('#adjustModal').classList.contains('show') || $('#qrModal').classList.contains('show')) return;
 
-  if (e && window.burstParticles) {
-    const cx = e.clientX || window.innerWidth / 2; const cy = e.clientY || window.innerHeight / 2;
-    window.burstParticles(cx, cy, 40, 10);
-  }
   playChime();
 
   const currentId = activeSlides[currentStepIndex];
@@ -919,131 +901,132 @@ function nextStep(e) {
   }
   advance();
 }
+document.addEventListener('click', nextStep);
 
 function advance() {
   currentStepIndex++;
   if (currentStepIndex < activeSlides.length) {
     const nextId = activeSlides[currentStepIndex];
-    
     if (nextId === 2) {
       revealName(currentName); isTransitioning = true;
       setTimeout(() => isTransitioning = false, 2500);
     }
-    
     showScreen(nextId);
     updateBackBtn();
-
     if (nextId === 20) {
       $('#finalName').textContent = currentName;
-      setTimeout(() => {
-        if (window.burstParticles) {
-          window.burstParticles(window.innerWidth/2, window.innerHeight/2, 150, 18);
-          setTimeout(() => window.burstParticles(window.innerWidth*0.2, window.innerHeight*0.4, 80, 12), 300);
-          setTimeout(() => window.burstParticles(window.innerWidth*0.8, window.innerHeight*0.4, 80, 12), 600);
-        }
-      }, 500);
     }
   }
 }
 
-document.addEventListener('click', nextStep);
-
 /* ============================================================
-   SHARE & QR & RESET
+   TOAST
    ============================================================ */
 function toast(msg) {
   const t = $('#toast'); t.textContent = msg; t.classList.add('show');
-  clearTimeout(t._tm); t._tm = setTimeout(() => t.classList.remove('show'), 3000);
+  clearTimeout(t._tm); t._tm = setTimeout(() => t.classList.remove('show'), 3500);
 }
 
+/* ============================================================
+   SHARE + QR
+   ============================================================ */
+function buildShareUrl() {
+  if (shareId) return `${location.origin}${location.pathname}?id=${shareId}`;
+  return location.href;
+}
 async function shareWish() {
-  const url = location.href; const title = 'A birthday wish for ' + currentName;
+  const url = buildShareUrl();
+  const title = 'A birthday wish for ' + currentName;
   if (navigator.share) { try { await navigator.share({ title, url }); return; } catch (_) {} }
   try { await navigator.clipboard.writeText(url); toast('Link copied! ✨'); } catch { window.prompt('Copy this link:', url); }
 }
 $('#shareBtn').addEventListener('click', (e) => { e.stopPropagation(); shareWish(); });
 
-// New Local QR Code Generator
 $('#qrBtn').addEventListener('click', (e) => {
   e.stopPropagation();
   const container = $('#qrContainer');
-  container.innerHTML = ''; // Clear previous
-  
-  // Generate QR using the library
-  new QRCode(container, {
-    text: location.href,
-    width: 250,
-    height: 250,
-    colorDark : "#000000",
-    colorLight : "#ffffff",
-    correctLevel : QRCode.CorrectLevel.L // Low error correction allows bigger text
-  });
-  
+  container.innerHTML = '';
+  const url = buildShareUrl();
+  try {
+    new QRCode(container, {
+      text: url,
+      width: 250,
+      height: 250,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  } catch (err) {
+    container.innerHTML = '<p style="color:#ef4444;font-size:12px;padding:20px;text-align:center;">QR failed: ' + err.message + '</p>';
+  }
   $('#qrModal').classList.add('show');
 });
 $('#closeQrBtn').addEventListener('click', (e) => { e.stopPropagation(); $('#qrModal').classList.remove('show'); });
 $('#qrModal').addEventListener('click', (e) => { if (e.target === e.currentTarget) $('#qrModal').classList.remove('show'); });
 
-$('#againBtn').addEventListener('click', (e) => {
-  e.stopPropagation(); window.location.href = window.location.pathname;
-});
-
 /* ============================================================
-   FORM SUBMISSION & BOOT
+   FORM SUBMIT → CUSTOMIZER
    ============================================================ */
 $('#createForm').addEventListener('submit', (e) => {
   e.preventDefault();
-  const input = $('#nameInput'); const name = input.value.replace(/[<>]/g, '').trim().slice(0, 20);
+  const input = $('#nameInput');
+  const name = input.value.replace(/[<>]/g, '').trim().slice(0, 20);
   if (!name) { input.style.borderColor = '#ef4444'; setTimeout(() => { input.style.borderColor = ''; }, 1500); return; }
-  
-  ensureAudio(); currentName = name;
+  ensureAudio();
+  currentName = name;
   updatePersistentProfile(currentPhoto);
-  
-  // Move to Customizer
   $('#creator').classList.remove('on');
   $('#customizer').classList.add('on');
   renderCustomizer();
 });
 
-(function boot() {
-  setBackground();
+/* ============================================================
+   BOOT — URL ?id= se load
+   ============================================================ */
+(async function boot() {
   updatePersistentProfile(null);
 
   const p = new URLSearchParams(location.search);
-  const dataParam = p.get('data');
+  const wishId = p.get('id');
 
-  if (dataParam) {
-    // Recipient mode
+  if (wishId) {
     isRecipient = true;
+    shareId = wishId;
     try {
-      const state = JSON.parse(decodeURIComponent(dataParam));
-      currentName = state.n || 'Friend';
-      if (state.p) { currentPhoto = state.p; updatePersistentProfile(currentPhoto); }
-      if (state.a && state.a.length > 0) activeSlides = state.a;
-      if (state.m) customMessages = state.m;
-      
-      // Apply custom messages
-      for (let i = 4; i <= 19; i++) {
-        if (activeSlides.includes(i)) {
-          const msg = customMessages[i] || slideData[i];
-          $(`#msg${i}`).innerHTML = `"${msg.en.replace(/<[^>]*>/g, '')}" <span class="hindi">"${msg.hi.replace(/<[^>]*>/g, '')}"</span>`;
-        }
+      if (!window.fbReady) {
+        // Firebase module abhi load nahi hua, thoda wait karo
+        await new Promise((res) => {
+          const t = setInterval(() => { if (window.fbReady) { clearInterval(t); res(); } }, 50);
+          setTimeout(() => { clearInterval(t); res(); }, 5000);
+        });
       }
+      if (!window.fbReady) throw new Error('Firebase not loaded');
 
-      // Configure Final Screen buttons for Recipient
+      const data = await window.fbLoadWish(wishId);
+      if (!data) throw new Error('Wish not found');
+
+      currentName = data.n || 'Friend';
+      if (data.a && data.a.length > 0) activeSlides = data.a;
+      if (data.m) customMessages = data.m;
+      if (data.p) { currentPhoto = data.p; updatePersistentProfile(currentPhoto); }
+
+      renderAllActiveMessages();
+
+      // Final screen ke buttons recipient ke liye
       $('#finalActions').innerHTML = `
-        <button class="btn-primary" id="againBtn" style="display: block;">Create Your Own ✨</button>
+        <button class="btn-primary" id="againBtn">Create Your Own ✨</button>
       `;
-      // Rebind the new button
       $('#againBtn').addEventListener('click', (e) => { e.stopPropagation(); window.location.href = window.location.pathname; });
 
       $('#creator').classList.remove('on');
       currentStepIndex = 0;
       showScreen(activeSlides[0]);
-      
+      updateBackBtn();
     } catch (err) {
-      console.error("Invalid data format", err);
-      // Fallback to creator if URL is corrupted
+      console.error('Load error:', err);
+      toast('Wish not found or expired');
+      // Fallback: creator screen hi dikhao
+      $('#creator').classList.add('on');
     }
   }
 })();
