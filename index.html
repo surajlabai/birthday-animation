@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Ultimate Birthday Experience</title>
+<meta name="theme-color" content="#050508" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   COLOR THEME (Sky Blue Text + Emerald Green Cards)
+   ============================================================ */
+:root {
+  --bg-base: #050508;
+  --card: rgba(10, 10, 15, 0.5);
+  --card-hover: rgba(255, 255, 255, 0.05);
+  
+  --border: rgba(255, 255, 255, 0.08);
+  --border-glow: rgba(56, 189, 248, 0.4);
+  
+  --accent: #38bdf8;            /* Sky Blue */
+  --accent-glow: rgba(56, 189, 248, 0.4);
+  --primary: #10b981;           /* Emerald Green */
+  --primary-glow: rgba(16, 185, 129, 0.4);
+  
+  --text-main: #38bdf8;         /* Forced Sky Blue for all main text */
+  --text-muted: #38bdf8;        /* Forced Sky Blue for all muted text */
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ============================================================
+   BASE RESET & FONTS
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  background-color: var(--bg-base);
+  color: var(--accent); /* Default to sky blue */
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
+  perspective: 1000px;
+}
+.serif { font-family: 'Playfair Display', Georgia, serif; }
+
+/* Global Sky Blue Text Style */
+.text-sky {
+  color: var(--accent) !important;
+  text-shadow: 0 0 20px var(--accent-glow);
+}
+
+/* ============================================================
+   BACKGROUND CANVAS LAYERS
+   ============================================================ */
+.bg-canvas {
+  position: fixed; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 1;
+  opacity: 0; transition: opacity 1.5s var(--ease);
+}
+.bg-canvas.active { opacity: 1; }
+
+/* ============================================================
+   CARDS & PANELS (Emerald Green Glow)
+   ============================================================ */
+.panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 56px 48px;
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  box-shadow: 
+    0 24px 48px -12px rgba(0, 0, 0, 0.8),
+    0 0 50px var(--primary-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-color: rgba(16, 185, 129, 0.5);
+  position: relative;
+  width: 100%;
+  max-width: 720px; /* Increased width slightly for better text fit */
+  z-index: 10;
+  transform-style: preserve-3d;
+  transition: transform 0.2s ease-out, box-shadow 0.3s var(--ease);
+}
+.panel::before, .panel::after {
+  content: '';
+  position: absolute;
+  width: 100px; height: 100px;
+  border: 1px solid var(--primary);
+  opacity: 0.7;
+  border-radius: 24px;
+  pointer-events: none;
+  transition: all 0.4s var(--ease);
+}
+.panel::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+.panel::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+/* ============================================================
+   INPUTS & BUTTONS
+   ============================================================ */
+.input-group { display: flex; flex-direction: column; gap: 24px; margin: 40px 0; }
+input[type="text"] {
+  width: 100%; padding: 20px 24px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--border); border-radius: 12px;
+  color: var(--accent); /* Sky blue input text */
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 18px; text-align: center; outline: none;
+  transition: all 0.4s var(--ease);
+}
+input[type="text"]::placeholder { color: rgba(56, 189, 248, 0.5); } /* Sky blue placeholder */
+input[type="text"]:focus {
+  border-color: var(--accent);
+  background: rgba(56, 189, 248, 0.05);
+  box-shadow: 0 0 0 4px var(--accent-glow);
+}
+
+.btn-primary {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 100%; padding: 22px 32px;
+  background: linear-gradient(135deg, var(--primary), #059669);
+  color: #fff; border: none; border-radius: 12px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px; font-weight: 700; letter-spacing: 0.05em;
+  cursor: pointer; transition: all 0.4s var(--bounce);
+  box-shadow: 0 10px 30px var(--primary-glow);
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 40px rgba(16, 185, 129, 0.6); }
+.btn-primary:active { transform: translateY(1px) scale(0.98); }
+
+.btn-ghost {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 100%; padding: 22px 32px;
+  background: transparent; color: var(--accent);
+  border: 1px solid var(--border); border-radius: 12px;
+  font-family: inherit; font-size: 16px; font-weight: 600;
+  cursor: pointer; transition: all 0.4s var(--ease);
+}
+.btn-ghost:hover { background: var(--card-hover); border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
+
+/* ============================================================
+   TYPOGRAPHY & TEXT-IN ANIMATION
+   ============================================================ */
+.heading-lg {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.6rem, 5vw, 4rem);
+  font-weight: 600; line-height: 1.15;
+  letter-spacing: -0.02em; margin-bottom: 24px;
+  color: var(--accent); /* Sky Blue */
+  text-shadow: 0 0 30px var(--accent-glow);
+}
+
+/* The Wish Message (All Sky Blue, fixed cutting) */
+.wish-message {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.5rem, 4vw, 2.4rem);
+  font-style: italic;
+  line-height: 1.7; /* Increased for no cutting */
+  color: var(--accent);
+  text-shadow: 0 0 20px var(--accent-glow);
+  text-align: center;
+  padding-bottom: 8px; /* Extra safety against cutting */
+}
+
+.wish-message .hindi {
+  display: block;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-style: normal;
+  font-size: 0.85em;
+  font-weight: 500;
+  color: var(--accent);
+  margin-top: 24px;
+  line-height: 1.8;
+  text-shadow: 0 0 15px var(--accent-glow);
+}
+
+/* Text-In Animation */
+.text-anim {
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
+  filter: blur(10px);
+}
+.screen.on .text-anim {
+  animation: textIn 1.5s var(--bounce) 0.2s forwards;
+}
+@keyframes textIn {
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+
+/* ============================================================
+   SCREENS & PANEL ENTRY ANIMATION
+   ============================================================ */
+.stage {
+  position: fixed; inset: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+.screen {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 32px 24px; text-align: center;
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.6s var(--ease), visibility 0.6s var(--ease);
+  pointer-events: none;
+}
+.screen.on { opacity: 1; visibility: visible; pointer-events: auto; }
+
+/* Panel Entry Animation */
+.screen.on .panel {
+  animation: panelIn 1s var(--bounce) forwards;
+}
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(40px) scale(0.9) rotateX(10deg); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ============================================================
+   3D PLANT / FLOWER GROWTH ANIMATIONS (SVG)
+   ============================================================ */
+.plant-container {
+  position: absolute; z-index: 2; pointer-events: none;
+  width: 220px; height: 220px; opacity: 0.9;
+}
+.plant-container.top-left { top: -50px; left: -50px; transform: rotate(-15deg); }
+.plant-container.bottom-right { bottom: -50px; right: -50px; transform: rotate(165deg); }
+.plant-container.center-bg { top: 50%; left: 50%; transform: translate(-50%, -50%); width: 350px; height: 350px; opacity: 0.15; }
+
+@keyframes growVine {
+  0% { stroke-dashoffset: 200; opacity: 0; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
+}
+@keyframes bloomPetal {
+  0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+  60% { transform: scale(1.2) rotate(10deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.plant-svg path.vine {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+}
+.screen.on .plant-svg path.vine {
+  animation: growVine 2.5s var(--ease) forwards;
+}
+.plant-svg .petal, .plant-svg .leaf {
+  transform-origin: center;
+  transform: scale(0);
+}
+.screen.on .plant-svg .petal {
+  animation: bloomPetal 1.8s var(--bounce) forwards;
+}
+.screen.on .plant-svg .leaf {
+  animation: bloomPetal 2s var(--ease) forwards;
+}
+
+.screen.on .plant-svg .petal:nth-child(1) { animation-delay: 0.2s; }
+.screen.on .plant-svg .petal:nth-child(2) { animation-delay: 0.4s; }
+.screen.on .plant-svg .petal:nth-child(3) { animation-delay: 0.6s; }
+
+/* ============================================================
+   CAKE
+   ============================================================ */
+.cake { position: relative; display: flex; flex-direction: column; align-items: center; margin: 48px 0 32px; filter: drop-shadow(0 30px 50px rgba(0,0,0,0.8)); }
+.candles { display: flex; gap: 20px; margin-bottom: 4px; z-index: 3; }
+.candle {
+  position: relative; width: 6px; height: 40px;
+  background: linear-gradient(180deg, var(--accent), #0ea5e9);
+  border-radius: 2px; box-shadow: 0 0 15px var(--accent-glow);
+}
+.flame {
+  position: absolute; left: 50%; top: -20px;
+  width: 14px; height: 24px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: radial-gradient(circle at 50% 75%, var(--accent) 0%, #0ea5e9 40%, transparent 80%);
+  box-shadow: 0 0 30px 6px var(--accent-glow);
+  transform-origin: 50% 100%;
+  animation: flick 0.4s ease-in-out infinite alternate;
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+}
+@keyframes flick {
+  0% { transform: translateX(-50%) scale(1) rotate(-3deg); opacity: 0.9; }
+  100% { transform: translateX(-50%) scale(1.1, 0.9) rotate(3deg); opacity: 1; }
+}
+.flame.out { animation: none; opacity: 0; transform: translateX(-50%) scale(0.1); }
+
+.tier { position: relative; width: 220px; height: 65px; margin-top: 3px; }
+.tier.top { width: 130px; height: 55px; background: linear-gradient(145deg, rgba(56,189,248,0.15), rgba(56,189,248,0.05)); border: 1px solid var(--border-glow); border-radius: 8px 8px 2px 2px; backdrop-filter: blur(10px); }
+.tier.mid { width: 180px; height: 50px; background: linear-gradient(145deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05)); border: 1px solid rgba(16,185,129,0.4); border-radius: 2px; }
+.tier.bot { width: 240px; height: 60px; background: linear-gradient(145deg, rgba(0,0,0,0.6), rgba(0,0,0,0.9)); border: 1px solid var(--border); border-radius: 2px 2px 12px 12px; box-shadow: inset 0 1px 0 rgba(56, 189, 248, 0.2); }
+
+/* ============================================================
+   NAME DISPLAY
+   ============================================================ */
+.name-display {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(4rem, 14vw, 9rem);
+  font-weight: 600; line-height: 1;
+  display: flex; flex-wrap: wrap; justify-content: center;
+  margin-top: 16px;
+}
+.name-display .letter {
+  display: inline-block;
+  color: var(--accent);
+  text-shadow: 0 0 40px var(--accent-glow);
+  opacity: 0; filter: blur(12px); transform: translateY(30px) rotateX(-45deg);
+  animation: letterIn 1.4s var(--bounce) forwards;
+}
+@keyframes letterIn { to { opacity: 1; filter: blur(0); transform: none; } }
+
+/* ============================================================
+   MISC & TOAST
+   ============================================================ */
+.sound-btn {
+  position: fixed; top: 24px; right: 24px; z-index: 50;
+  width: 48px; height: 48px;
+  border: 1px solid var(--border); background: var(--card);
+  backdrop-filter: blur(10px); border-radius: 50%; color: var(--primary);
+  font-size: 18px; cursor: pointer; display: grid; place-items: center;
+  transition: all 0.3s var(--ease);
+}
+.sound-btn:hover { border-color: var(--primary); background: rgba(16,185,129,0.1); box-shadow: 0 0 20px var(--primary-glow); transform: scale(1.1); }
+
+.toast {
+  position: fixed; left: 50%; bottom: 48px; z-index: 200;
+  transform: translate(-50%, 24px);
+  padding: 16px 32px; background: #0d1117;
+  border: 1px solid var(--primary); border-radius: 12px;
+  color: var(--primary); font-size: 14px; font-weight: 600;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 24px var(--primary-glow);
+  opacity: 0; pointer-events: none; transition: all 0.4s var(--ease);
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 480px) {
+  .panel { padding: 40px 24px; }
+  .name-display { font-size: 4rem; }
+  .wish-message { font-size: 1.3rem; }
+  .wish-message .hindi { font-size: 0.85em; margin-top: 16px; }
+  .plant-container { width: 140px; height: 140px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     BACKGROUND CANVAS LAYERS (Rotates every step)
+     ============================================================ -->
+<canvas id="bg-heart" class="bg-canvas"></canvas>
+<canvas id="bg-const" class="bg-canvas"></canvas>
+<canvas id="bg-jelly" class="bg-canvas"></canvas>
+<canvas id="bg-fx" class="bg-canvas"></canvas>
+
+<button class="sound-btn" id="soundBtn" aria-label="Toggle sound">🔊</button>
+
+<main class="stage" id="stage">
+
+  <!-- 0 · CREATOR -->
+  <section class="screen on" id="creator">
+    <div class="panel" id="creatorPanel">
+      <h1 class="heading-lg text-anim">
+        Make someone's day<br><span class="text-sky">unforgettable</span>
+      </h1>
+      <p class="text-anim" style="font-size: 16px; color: var(--accent); animation-delay: 0.3s; text-shadow: 0 0 15px var(--accent-glow);">
+        
+      </p>
+      
+      <form id="createForm" autocomplete="off" class="text-anim" style="animation-delay: 0.5s;">
+        <div class="input-group">
+          <input id="nameInput" type="text" placeholder="Enter name...@surajprocreater" maxlength="20" spellcheck="false" />
+          <button type="submit" class="btn-primary">Create Magic ✨</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- 1 · INTRO -->
+  <section class="screen" id="step1">
+    <div class="monogram-wrap text-anim" style="position:relative;width:140px;height:140px;display:grid;place-items:center;margin-bottom:48px;">
+      <div style="position:absolute;inset:0;border:1px solid var(--border);border-radius:50%;animation:spin 20s linear infinite;"></div>
+      <div style="font-size:40px;color:var(--accent);filter:drop-shadow(0 0 16px var(--accent-glow));">surajprocreter</div>
+    </div>
+    <h2 class="serif text-anim" style="font-size: 2.4rem; color: var(--accent); line-height: 1.4; text-shadow: 0 2px 20px var(--accent-glow); animation-delay: 0.3s;">
+      Someone truly special<br>turns a year wiser today.
+    </h2>
+  </section>
+
+  <!-- 2 · NAME -->
+  <section class="screen" id="step2">
+    <h1 class="name-display" id="nameBig"></h1>
+  </section>
+
+  <!-- 3 · CAKE -->
+  <section class="screen" id="step3">
+    <h2 class="serif text-anim text-sky" style="font-size: 2.4rem; text-shadow: 0 4px 25px var(--accent-glow);">Make a wish.</h2>
+    <div class="cake text-anim" style="animation-delay: 0.3s;">
+      <div class="candles">
+        <span class="candle"><i class="flame"></i></span>
+        <span class="candle"><i class="flame"></i></span>
+        <span class="candle"><i class="flame"></i></span>
+        <span class="candle"><i class="flame"></i></span>
+        <span class="candle"><i class="flame"></i></span>
+      </div>
+      <div class="tier top"></div>
+      <div class="tier mid"></div>
+      <div class="tier bot"></div>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="screen" id="step4">
+    <div class="plant-container top-left">
+      <svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--primary)" stroke-width="2">
+        <path class="vine" d="M50 90 Q50 50 50 30 M50 50 Q30 40 20 20 M50 50 Q70 40 80 20" stroke-linecap="round"/>
+        <circle class="petal" cx="50" cy="30" r="8" fill="rgba(16,185,129,0.2)"/>
+        <circle class="petal" cx="20" cy="20" r="6" fill="rgba(16,185,129,0.2)"/>
+        <circle class="petal" cx="80" cy="20" r="6" fill="rgba(16,185,129,0.2)"/>
+      </svg>
+    </div>
+    <div class="panel">
+      <h2 class="wish-message text-anim">
+        "On this day, the universe quietly gave the world a gift — <span class="text-sky">you</span>."
+        <span class="hindi">"आज के दिन, ब्रह्मांड ने चुपचाप दुनिया को एक उपहार दिया — <span class="text-sky">आप</span>।"</span>
+      </h2>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="screen" id="step5">
+    <div class="plant-container bottom-right">
+      <svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="2">
+        <circle class="petal" cx="50" cy="50" r="30" stroke-dasharray="10 10"/>
+        <path class="vine" d="M50 20 L50 80 M20 50 L80 50" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="panel">
+      <h2 class="wish-message text-anim">
+        "May your year overflow with laughter that never fades, and dreams that gently <span class="text-sky">come true</span>."
+        <span class="hindi">"आपका साल ऐसी हँसी से भरा रहे जो कभी फीकी न पड़े, और सपने धीरे-धीरे <span class="text-sky">सच होते रहें</span>।"</span>
+      </h2>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section class="screen" id="step6">
+    <div class="plant-container center-bg">
+      <svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--primary)" stroke-width="1">
+        <circle class="petal" cx="50" cy="50" r="40"/>
+        <circle class="petal" cx="50" cy="50" r="25"/>
+        <circle class="petal" cx="50" cy="50" r="10" fill="var(--primary)"/>
+      </svg>
+    </div>
+    <div class="panel">
+      <h2 class="wish-message text-anim">
+        "You have a rare kind of magic. The kind that makes everything around you <span class="text-sky">brighter</span>."
+        <span class="hindi">"आपके पास एक दुर्लभ जादू है। ऐसा जादू जो आपके आस-पास की हर चीज़ को <span class="text-sky">रोशन</span> कर देता है।"</span>
+      </h2>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="screen" id="step7">
+    <div class="plant-container top-left">
+      <svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="2">
+        <path class="vine" d="M50 90 C50 50 20 50 20 20 C40 20 50 50 50 50 C50 50 60 20 80 20 C80 50 50 50 50 90Z" fill="rgba(56,189,248,0.1)"/>
+      </svg>
+    </div>
+    <div class="panel">
+      <h2 class="wish-message text-anim">
+        "Wishing you moments worth remembering forever, and a year that exceeds every <span class="text-sky">expectation</span>."
+        <span class="hindi">"आपको हमेशा याद रखने वाले पलों की शुभकामनाएं, और एक ऐसा साल जो हर <span class="text-sky">उम्मीद</span> से बढ़कर हो।"</span>
+      </h2>
+    </div>
+  </section>
+
+  <!-- 8 -->
+  <section class="screen" id="step8">
+    <div class="plant-container bottom-right">
+      <svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--primary)" stroke-width="2">
+        <path class="vine" d="M50 10 L90 50 L50 90 L10 50 Z" stroke-linejoin="round"/>
+        <path class="leaf" d="M50 30 L70 50 L50 70 L30 50 Z" fill="rgba(16,185,129,0.2)"/>
+      </svg>
+    </div>
+    <div class="panel">
+      <h2 class="wish-message text-anim">
+        "Keep shining, keep dreaming, and keep being the incredible person you are. The world needs your <span class="text-sky">light</span>."
+        <span class="hindi">"चमकते रहें, सपने देखते रहें, और वही अद्भुत इंसान बने रहें जो आप हैं। दुनिया को आपकी <span class="text-sky">रोशनी</span> की ज़रूरत है।"</span>
+      </h2>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section class="screen" id="step9">
+    <div class="panel">
+      <h2 class="wish-message text-anim">
+        "May the coming year bring you closer to everything you've ever wanted and more than you ever <span class="text-sky">imagined</span>."
+        <span class="hindi">"आने वाला साल आपको आपकी हर चाहत के करीब ले जाए, और आपने जो सोचा भी नहीं हो वो सब <span class="text-sky">मिले</span>।"</span>
+      </h2>
+    </div>
+  </section>
+
+  <!-- 10 -->
+  <section class="screen" id="step10">
+    <div class="plant-container top-left">
+      <svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="2">
+        <circle class="petal" cx="50" cy="50" r="20" fill="rgba(56,189,248,0.1)"/>
+        <path class="vine" d="M50 10 L50 30 M50 70 L50 90 M10 50 L30 50 M70 50 L90 50" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="panel">
+      <h2 class="wish-message text-anim">
+        "Here's to new adventures, bold decisions, and the beautiful chaos of <span class="text-sky">life</span>."
+        <span class="hindi">"नए रोमांच, साहसिक फैसलों, और ज़िंदगी की खूबसूरत उथल-पुथल के लिए — <span class="text-sky">चीयर्स!</span>"</span>
+      </h2>
+    </div>
+  </section>
+
+  <!-- 11 -->
+  <section class="screen" id="step11">
+    <div class="panel">
+      <h2 class="wish-message text-anim">
+        "You inspire everyone around you without even trying. Today, we celebrate the masterpiece that is <span class="text-sky">you</span>."
+        <span class="hindi">"आप बिना कोशिश किए भी अपने आस-पास के हर इंसान को प्रेरित करते हैं। आज हम उस कलाकृति का जश्न मनाते हैं जो <span class="text-sky">आप</span> हैं।"</span>
+      </h2>
+    </div>
+  </section>
+
+  <!-- 12 -->
+  <section class="screen" id="step12">
+    <div class="plant-container bottom-right">
+      <svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--primary)" stroke-width="3">
+        <path class="vine" d="M50 90 Q50 60 20 40 Q50 30 50 10 Q50 30 80 40 Q50 60 50 90" fill="rgba(16,185,129,0.15)"/>
+      </svg>
+    </div>
+    <div class="panel">
+      <h2 class="wish-message text-anim">
+        "May your cup always be full, your heart always be light, and your path always be <span class="text-sky">clear</span>."
+        <span class="hindi">"आपका प्याला हमेशा भरा रहे, आपका दिल हमेशा हल्का रहे, और आपका रास्ता हमेशा <span class="text-sky">साफ</span> रहे।"</span>
+      </h2>
+    </div>
+  </section>
+
+  <!-- 13 -->
+  <section class="screen" id="step13">
+    <div class="panel">
+      <h2 class="wish-message text-anim">
+        "Another year older, another year bolder, another year of being absolutely <span class="text-sky">extraordinary</span>."
+        <span class="hindi">"एक और साल बड़े, एक और साल बेहतर, और एक और साल बिल्कुल <span class="text-sky">असाधारण</span> होने का।"</span>
+      </h2>
+    </div>
+  </section>
+
+  <!-- 14 -->
+  <section class="screen" id="step14">
+    <div class="plant-container top-left">
+      <svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="2">
+        <path class="vine" d="M10 90 Q30 70 50 50 Q70 30 90 10" stroke-linecap="round"/>
+        <circle class="petal" cx="30" cy="70" r="4" fill="var(--accent)"/>
+        <circle class="petal" cx="70" cy="30" r="4" fill="var(--accent)"/>
+      </svg>
+    </div>
+    <div class="panel">
+      <h2 class="wish-message text-anim">
+        "May you find joy in the little things, strength in the hard times, and magic in the <span class="text-sky">everyday</span>."
+        <span class="hindi">"आपको छोटी-छोटी चीज़ों में खुशी मिले, मुश्किल वक्त में ताकत मिले, और रोज़मर्रा की ज़िंदगी में <span class="text-sky">जादू</span> मिले।"</span>
+      </h2>
+    </div>
+  </section>
+
+  <!-- 15 -->
+  <section class="screen" id="step15">
+    <div class="panel">
+      <h2 class="wish-message text-anim">
+        "You deserve all the good things this world has to offer. Never forget your <span class="text-sky">worth</span>."
+        <span class="hindi">"आप इस दुनिया की सारी अच्छी चीज़ों के हकदार हैं। अपनी <span class="text-sky">कीमत</span> कभी मत भूलिए।"</span>
+      </h2>
+    </div>
+  </section>
+
+  <!-- 16 -->
+  <section class="screen" id="step16">
+    <div class="plant-container bottom-right">
+      <svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--primary)" stroke-width="2">
+        <polygon class="vine" points="50,10 90,50 50,90 10,50" fill="rgba(16,185,129,0.1)"/>
+      </svg>
+    </div>
+    <div class="panel">
+      <h2 class="wish-message text-anim">
+        "Here's to a year of saying 'yes' to new opportunities and 'no' to anything that doesn't <span class="text-sky">serve you</span>."
+        <span class="hindi">"यह साल नए मौकों को 'हाँ' कहने का हो, और हर उस चीज़ को 'ना' कहने का जो आपके <span class="text-sky">काम की नहीं</span>।"</span>
+      </h2>
+    </div>
+  </section>
+
+  <!-- 17 -->
+  <section class="screen" id="step17">
+    <div class="panel">
+      <h2 class="wish-message text-anim">
+        "May your life be a beautiful story that you are excited to <span class="text-sky">read</span> every single day."
+        <span class="hindi">"आपकी ज़िंदगी एक खूबसूरत कहानी बने, जिसे पढ़ने में आपको हर दिन <span class="text-sky">मज़ा</span> आए।"</span>
+      </h2>
+    </div>
+  </section>
+
+  <!-- 18 -->
+  <section class="screen" id="step18">
+    <div class="plant-container center-bg">
+      <svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="1">
+        <circle class="petal" cx="50" cy="50" r="45" stroke-dasharray="5 5"/>
+        <circle class="petal" cx="50" cy="50" r="35"/>
+        <circle class="petal" cx="50" cy="50" r="25"/>
+      </svg>
+    </div>
+    <div class="panel">
+      <h2 class="wish-message text-anim">
+        "The world is a better place because you are in it. Thank you for simply <span class="text-sky">existing</span>."
+        <span class="hindi">"दुनिया एक बेहतर जगह है क्योंकि आप इसमें हैं। बस आपके होने के लिए <span class="text-sky">धन्यवाद</span>।"</span>
+      </h2>
+    </div>
+  </section>
+
+  <!-- 19 -->
+  <section class="screen" id="step19">
+    <div class="panel">
+      <h2 class="wish-message text-anim">
+        "This is your year. The year you step into your power and truly shine. <span class="text-sky">Believe it</span>."
+        <span class="hindi">"यह आपका साल है। वो साल जब आप अपनी ताकत को पहचानेंगे और सच में <span class="text-sky">चमकेंगे</span>। इस पर यकीन कीजिए।"</span>
+      </h2>
+    </div>
+  </section>
+
+  <!-- 20 · FINALE -->
+  <section class="screen" id="step20">
+    <div class="plant-container top-left">
+      <svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--primary)" stroke-width="2">
+        <path class="vine" d="M50 90 Q50 50 50 30 M50 50 Q30 40 20 20 M50 50 Q70 40 80 20" stroke-linecap="round"/>
+        <circle class="petal" cx="50" cy="30" r="8" fill="rgba(16,185,129,0.2)"/>
+        <circle class="petal" cx="20" cy="20" r="6" fill="rgba(16,185,129,0.2)"/>
+        <circle class="petal" cx="80" cy="20" r="6" fill="rgba(16,185,129,0.2)"/>
+      </svg>
+    </div>
+    <div class="plant-container bottom-right">
+      <svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="2">
+        <circle class="petal" cx="50" cy="50" r="30" stroke-dasharray="10 10"/>
+        <path class="vine" d="M50 20 L50 80 M20 50 L80 50" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="panel">
+      <h1 class="serif text-anim text-sky" style="font-size: clamp(3rem, 8vw, 5rem); margin-bottom: 24px;" id="finalName"></h1>
+      <p class="wish-message text-anim" style="animation-delay: 0.3s; margin-bottom: 48px;">
+        Happy Birthday. Have the most incredible year of your life.
+        <span class="hindi">जन्मदिन मुबारक हो। आपके जीवन का सबसे शानदार साल हो।</span>
+      </p>
+      
+      <div class="actions text-anim" style="animation-delay: 0.5s; display: flex; flex-direction: column; gap: 16px;">
+        <button class="btn-primary" id="shareBtn">Share this wish 🔗</button>
+        <button class="btn-ghost" id="againBtn">Compose another ✨</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $  = (s) => document.querySelector(s);
+const $$ = (s) => [...document.querySelectorAll(s)];
+const rand  = (a, b) => a + Math.random() * (b - a);
+const wait  = (ms) => new Promise((r) => setTimeout(r, ms));
+const pick  = (a) => a[(Math.random() * a.length) | 0];
+
+/* ============================================================
+   BACKGROUND ANIMATION ENGINE (Rotates 4 styles)
+   ============================================================ */
+const bgCanvasIds = ['bg-heart', 'bg-const', 'bg-jelly', 'bg-fx'];
+let bgAnimations = {};
+
+// 1. Heart Animation
+bgAnimations['bg-heart'] = function() {
+  const canvas = document.getElementById("bg-heart");
+  const ctx = canvas.getContext("2d");
+  let W = 0, H = 0, animId;
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = Math.floor(W * dpr); canvas.height = Math.floor(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize(); window.addEventListener("resize", resize);
+  function drawHeart(cx, cy, s, fill, glow, blur = 12) {
+    ctx.save(); ctx.translate(cx, cy);
+    ctx.shadowBlur = blur; ctx.shadowColor = glow; ctx.fillStyle = fill;
+    ctx.beginPath(); const top = s * 0.3;
+    ctx.moveTo(0, top);
+    ctx.bezierCurveTo(0, 0, -s * 0.5, 0, -s * 0.5, top);
+    ctx.bezierCurveTo(-s * 0.5, (s + top) * 0.5, 0, (s + top) * 0.78, 0, s);
+    ctx.bezierCurveTo(0, (s + top) * 0.78, s * 0.5, (s + top) * 0.5, s * 0.5, top);
+    ctx.bezierCurveTo(s * 0.5, 0, 0, 0, 0, top);
+    ctx.closePath(); ctx.fill(); ctx.restore();
+  }
+  let tick = 0, sparks = [];
+  const runners = Array.from({ length: 20 }, (_, i) => ({ x: Math.random() * W, y: Math.random() * H, s: 9, vy: 0.75, sway: Math.random() * 6.28, rose: i % 2 === 0 }));
+  function loop() {
+    tick++; ctx.clearRect(0, 0, W, H);
+    runners.forEach(r => {
+      r.y -= r.vy; r.sway += 0.025; const x = r.x + Math.sin(r.sway) * 16;
+      if (r.y < -25) { r.y = H + 25; r.x = Math.random() * W; }
+      if (tick % 4 === 0) sparks.push({ x, y: r.y + r.s, a: 0.85, rose: r.rose });
+      const col = r.rose ? "rgba(251,113,133,0.8)" : "rgba(34,211,238,0.8)";
+      drawHeart(x, r.y, r.s, col, col, 14);
+    });
+    sparks.forEach((sp, i) => {
+      sp.y += 0.35; sp.a -= 0.024; if (sp.a <= 0) return sparks.splice(i, 1);
+      ctx.fillStyle = sp.rose ? `rgba(251,113,133,${sp.a})` : `rgba(34,211,238,${sp.a})`;
+      ctx.beginPath(); ctx.arc(sp.x, sp.y, 1.5, 0, Math.PI * 2); ctx.fill();
+    });
+    animId = requestAnimationFrame(loop);
+  }
+  loop();
+  return () => cancelAnimationFrame(animId);
+};
+
+// 2. Constellation Web
+bgAnimations['bg-const'] = function() {
+  const canvas = document.getElementById("bg-const");
+  const ctx = canvas.getContext("2d");
+  let W = canvas.width = window.innerWidth; let H = canvas.height = window.innerHeight; let animId;
+  window.addEventListener("resize", () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; });
+  const nodes = Array.from({ length: 48 }, () => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - 0.5) * 0.45, vy: (Math.random() - 0.5) * 0.45, r: 2 }));
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+    nodes.forEach((n, i) => {
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < 0 || n.x > W) n.vx *= -1; if (n.y < 0 || n.y > H) n.vy *= -1;
+      ctx.fillStyle = "rgba(34,211,238,0.65)"; ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
+      for (let j = i + 1; j < nodes.length; j++) {
+        const d = Math.hypot(n.x - nodes[j].x, n.y - nodes[j].y);
+        if (d < 155) { ctx.strokeStyle = `rgba(20,184,166,${(1 - d / 155) * 0.3})`; ctx.beginPath(); ctx.moveTo(n.x, n.y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.stroke(); }
+      }
+    });
+    animId = requestAnimationFrame(loop);
+  }
+  loop();
+  return () => cancelAnimationFrame(animId);
+};
+
+// 3. Bioluminescent Jelly Glow
+bgAnimations['bg-jelly'] = function() {
+  const canvas = document.getElementById("bg-jelly");
+  const ctx = canvas.getContext("2d");
+  let W = canvas.width = window.innerWidth; let H = canvas.height = window.innerHeight; let animId;
+  window.addEventListener("resize", () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; });
+  const jellies = Array.from({ length: 14 }, (_, i) => ({ x: Math.random() * W, y: Math.random() * H, r: 24, vy: 0.45, p: i, cyan: i % 2 === 0 }));
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+    jellies.forEach(j => {
+      j.y -= j.vy; j.p += 0.035; if (j.y < -60) j.y = H + 60;
+      const x = j.x + Math.cos(j.p * 0.6) * 14, r = j.r + Math.sin(j.p) * 4;
+      const g = ctx.createRadialGradient(x, j.y, 2, x, j.y, r * 2.2);
+      g.addColorStop(0, j.cyan ? "rgba(34,211,238,0.32)" : "rgba(16,185,129,0.32)"); g.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, j.y, r * 2.2, 0, Math.PI * 2); ctx.fill();
+    });
+    animId = requestAnimationFrame(loop);
+  }
+  loop();
+  return () => cancelAnimationFrame(animId);
+};
+
+// 4. Particle Explosion (Original)
+bgAnimations['bg-fx'] = function() {
+  const canvas = $('#bg-fx');
+  const ctx = canvas.getContext('2d');
+  let W = 0, H = 0, DPR = 1, animId;
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = W * DPR; canvas.height = H * DPR;
+    canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  resize(); window.addEventListener('resize', resize);
+  const COLORS = ['#38bdf8', '#10b981', '#e0f2fe', '#ffffff'];
+  const particles = []; const spriteCache = new Map();
+  function sprite(color) {
+    if (spriteCache.has(color)) return spriteCache.get(color);
+    const s = 64; const c = document.createElement('canvas');
+    c.width = c.height = s; const g = c.getContext('2d');
+    const grd = g.createRadialGradient(s/2, s/2, 0, s/2, s/2, s/2);
+    grd.addColorStop(0, 'rgba(255,255,255,1)'); grd.addColorStop(0.25, color); grd.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = grd; g.fillRect(0, 0, s, s);
+    spriteCache.set(color, c); return c;
+  }
+  function burst(x, y, count, power) {
+    for (let i = 0; i < count; i++) {
+      const a = Math.random() * Math.PI * 2; const sp = rand(2, power || 12);
+      particles.push({ type: 'burst', x, y, vx: Math.cos(a)*sp, vy: Math.sin(a)*sp - 2, size: rand(2, 5), life: rand(60, 120), max: 120, gravity: 0.05, color: pick(COLORS) });
+    }
+  }
+  window.burstParticles = burst;
+  
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.vx *= 0.95; p.life--;
+      const a = Math.min(1, p.life / 40); const s = p.size * 6;
+      ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a;
+      ctx.drawImage(sprite(p.color || pick(COLORS)), p.x - s/2, p.y - s/2, s, s);
+      ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
+      if (p.life <= 0 || p.y > H + 80) particles.splice(i, 1);
+    }
+    animId = requestAnimationFrame(frame);
+  }
+  frame();
+  return () => cancelAnimationFrame(animId);
+};
+
+let currentBgIndex = 0;
+let bgCleanup = null;
+
+function setBackground(index) {
+  bgCanvasIds.forEach(id => document.getElementById(id).classList.remove('active'));
+  if (bgCleanup) bgCleanup();
+  const targetId = bgCanvasIds[index % bgCanvasIds.length];
+  document.getElementById(targetId).classList.add('active');
+  bgCleanup = bgAnimations[targetId]();
+}
+
+/* ============================================================
+   MAGNETIC 3D PARALLAX EFFECT
+   ============================================================ */
+document.addEventListener('mousemove', (e) => {
+  const x = (window.innerWidth / 2 - e.pageX) / 40;
+  const y = (window.innerHeight / 2 - e.pageY) / 40;
+  const activePanel = document.querySelector('.screen.on .panel');
+  if (activePanel) activePanel.style.transform = `rotateY(${x}deg) rotateX(${y}deg) scale(1.02)`;
+});
+
+/* ============================================================
+   AUDIO
+   ============================================================ */
+let audioCtx = null, masterGain = null, isMuted = false;
+function ensureAudio() {
+  if (!audioCtx) {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    audioCtx = new AC();
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = isMuted ? 0 : 0.05;
+    masterGain.connect(audioCtx.destination);
+    [130.81, 196.00, 261.63, 329.63].forEach(freq => {
+      const osc = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      osc.type = 'sine'; osc.frequency.value = freq; g.gain.value = 0.05;
+      osc.connect(g); g.connect(masterGain); osc.start();
+    });
+  }
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+function playChime() {
+  if (!audioCtx || isMuted) return;
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  osc.type = 'triangle';
+  osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime + 0.1);
+  g.gain.setValueAtTime(0.1, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
+  osc.connect(g); g.connect(masterGain);
+  osc.start(); osc.stop(audioCtx.currentTime + 1.5);
+}
+document.addEventListener('click', ensureAudio, { once: true });
+$('#soundBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  isMuted = !isMuted;
+  if (masterGain) masterGain.gain.value = isMuted ? 0 : 0.05;
+  $('#soundBtn').textContent = isMuted ? '🔇' : '🔊';
+  if (!isMuted) ensureAudio();
+});
+
+/* ============================================================
+   THE 20-STEP TAP CONTROLLER
+   ============================================================ */
+const SCREENS = [
+  'step1', 'step2', 'step3', 'step4', 'step5', 'step6', 'step7', 'step8', 'step9', 'step10',
+  'step11', 'step12', 'step13', 'step14', 'step15', 'step16', 'step17', 'step18', 'step19', 'step20'
+];
+let currentStepIndex = -1;
+let currentName = '';
+let isTransitioning = false;
+
+function show(id) {
+  $$('.screen').forEach((s) => s.classList.toggle('on', s.id === id));
+  const panel = document.querySelector(`#${id} .panel`);
+  if (panel) panel.style.transform = '';
+}
+
+function revealName(name) {
+  const el = $('#nameBig');
+  el.innerHTML = '';
+  [...name].forEach((ch, i) => {
+    const span = document.createElement('span');
+    span.className = 'letter';
+    span.textContent = ch === ' ' ? '\u00A0' : ch;
+    span.style.animationDelay = (i * 0.08) + 's';
+    el.appendChild(span);
+  });
+}
+
+function blowCandles() {
+  $$('.flame').forEach((f, i) => {
+    const r = f.getBoundingClientRect();
+    setTimeout(() => {
+      f.classList.add('out');
+      if (window.burstParticles) window.burstParticles(r.left + r.width / 2, r.top + r.height / 2, 30, 8);
+    }, i * 100);
+  });
+}
+
+function nextStep(e) {
+  if (isTransitioning) return;
+  if (e && e.target.closest('button, input, a')) return;
+  if (currentStepIndex === -1) return; 
+  if (currentStepIndex >= SCREENS.length) return; 
+
+  if (e && window.burstParticles) {
+    const cx = e.clientX || W / 2;
+    const cy = e.clientY || H / 2;
+    window.burstParticles(cx, cy, 40, 10);
+  }
+  playChime();
+
+  if (SCREENS[currentStepIndex] === 'step3') {
+    blowCandles();
+    isTransitioning = true;
+    setTimeout(() => {
+      isTransitioning = false;
+      advance();
+    }, 1500);
+    return;
+  }
+
+  advance();
+}
+
+function advance() {
+  if (currentStepIndex >= 0 && currentStepIndex < SCREENS.length) {
+    const currentId = SCREENS[currentStepIndex];
+    const currentEl = document.getElementById(currentId);
+    if (currentEl) currentEl.classList.remove('on');
+  }
+
+  currentStepIndex++;
+
+  if (currentStepIndex < SCREENS.length) {
+    const nextId = SCREENS[currentStepIndex];
+    const nextEl = document.getElementById(nextId);
+    if (nextEl) {
+      setBackground(currentStepIndex);
+
+      if (nextId === 'step2') {
+        revealName(currentName);
+        isTransitioning = true;
+        setTimeout(() => isTransitioning = false, 2500);
+      }
+      nextEl.classList.add('on');
+      
+      if (nextId === 'step20') {
+        $('#finalName').textContent = currentName;
+        setTimeout(() => {
+          if (window.burstParticles) {
+            window.burstParticles(W/2, H/2, 150, 18);
+            setTimeout(() => window.burstParticles(W*0.2, H*0.4, 80, 12), 300);
+            setTimeout(() => window.burstParticles(W*0.8, H*0.4, 80, 12), 600);
+          }
+        }, 500);
+      }
+    }
+  }
+}
+
+document.addEventListener('click', nextStep);
+
+/* ============================================================
+   FORM SUBMISSION
+   ============================================================ */
+$('#createForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const input = $('#nameInput');
+  const name = input.value.replace(/[<>]/g, '').trim().slice(0, 20);
+  if (!name) {
+    input.style.borderColor = 'var(--danger)';
+    setTimeout(() => { input.style.borderColor = ''; }, 1500);
+    return;
+  }
+  
+  ensureAudio();
+  currentName = name;
+  history.replaceState(null, '', '?name=' + encodeURIComponent(name));
+  
+  $('#creator').classList.remove('on');
+  currentStepIndex = 0; 
+  setBackground(0); 
+  show(SCREENS[0]);
+  
+  if (window.burstParticles) window.burstParticles(window.innerWidth/2, window.innerHeight/2, 100, 15);
+});
+
+/* ============================================================
+   SHARE / RESET
+   ============================================================ */
+function toast(msg) {
+  const t = $('#toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._tm);
+  t._tm = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+async function shareWish() {
+  const url = location.href;
+  const title = 'A birthday wish for ' + currentName;
+  if (navigator.share) {
+    try { await navigator.share({ title, url }); return; } catch (_) {}
+  }
+  try {
+    await navigator.clipboard.writeText(url);
+    toast('Link copied! ✨');
+  } catch {
+    window.prompt('Copy this link:', url);
+  }
+}
+
+$('#shareBtn').addEventListener('click', (e) => { e.stopPropagation(); shareWish(); });
+
+$('#againBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  history.replaceState(null, '', location.pathname);
+  currentStepIndex = -1;
+  show('creator');
+  $('#nameInput').value = '';
+  setBackground(0);
+});
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+(function boot() {
+  setBackground(0);
+
+  const p = new URLSearchParams(location.search);
+  const raw = (p.get('name') || '').replace(/[<>]/g, '').trim().slice(0, 20);
+  if (raw) {
+    currentName = raw;
+    $('#creator').classList.remove('on');
+    currentStepIndex = 0;
+    show(SCREENS[0]);
+  }
+})();
+</script>
+</body>
+</html>
