@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- QR Code Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 /* ============================================================
    COLOR THEME
@@ -137,7 +139,7 @@ textarea { resize: vertical; min-height: 80px; }
   font-style: italic; line-height: 1.5;
   color: var(--accent); text-shadow: 0 0 20px var(--accent-glow);
   text-align: center; padding-bottom: 8px;
-  transition: font-size 0.2s ease; /* Smooth shrinking */
+  transition: font-size 0.2s ease;
 }
 .wish-message .hindi {
   display: block; font-family: 'Plus Jakarta Sans', sans-serif; font-style: normal;
@@ -295,8 +297,8 @@ input:checked + .slider:before { transform: translateX(18px); }
 .custom-inputs textarea { font-size: 14px; padding: 10px; min-height: 60px; }
 
 /* QR Modal specific */
-.qr-image { background: #fff; padding: 12px; border-radius: 12px; width: 250px; height: 250px; display: grid; place-items: center; }
-.qr-image img { width: 100%; height: 100%; object-fit: contain; }
+.qr-image { background: #fff; padding: 12px; border-radius: 12px; width: 250px; height: 250px; display: grid; place-items: center; overflow: hidden; }
+.qr-image canvas, .qr-image img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
 @media (max-width: 480px) {
   .panel { padding: 32px 20px; }
@@ -340,7 +342,7 @@ input:checked + .slider:before { transform: translateX(18px); }
             </div>
             <input type="file" id="photoInput" accept="image/*" style="display:none;">
           </div>
-          <input id="nameInput" type="text" placeholder="Enter name..." maxlength="20" spellcheck="false" />
+          <input id="nameInput" type="text" placeholder="Enter name... @srajproceater" maxlength="20" spellcheck="false" />
           <button type="submit" class="btn-primary">Create Magic ✨</button>
         </div>
       </form>
@@ -454,7 +456,6 @@ input:checked + .slider:before { transform: translateX(18px); }
       <p class="wish-message text-anim" style="animation-delay: 0.3s; margin-bottom: 48px;">Happy Birthday.<span class="hindi">जन्मदिन मुबारक हो।</span></p>
       <div class="actions text-anim" id="finalActions" style="animation-delay: 0.5s; display: flex; flex-direction: column; gap: 16px;">
         <button class="btn-primary" id="shareBtn">Share this wish 🔗</button>
-        <button class="btn-ghost" id="qrBtn">Show QR Code 📱</button>
         <button class="btn-ghost" id="againBtn" style="display: none;">Create Your Own ✨</button>
       </div>
     </div>
@@ -479,18 +480,6 @@ input:checked + .slider:before { transform: translateX(18px); }
       <button type="button" class="btn-ghost" id="cancelAdjust">Cancel</button>
       <button type="button" class="btn-primary" id="saveAdjust">Use Photo</button>
     </div>
-  </div>
-</div>
-
-<!-- QR Modal -->
-<div class="qr-overlay" id="qrModal">
-  <div class="qr-panel">
-    <h3 class="qr-title">Scan to view Wish</h3>
-    <div class="qr-image">
-      <img id="qrImg" src="" alt="QR Code">
-    </div>
-    <p style="font-size: 12px; text-align: center; color: var(--accent); opacity: 0.7;">Scan this code with any phone camera to open the experience.</p>
-    <button type="button" class="btn-primary" id="closeQrBtn" style="margin-top: 8px;">Close</button>
   </div>
 </div>
 
@@ -601,16 +590,13 @@ function adjustTextScale(el) {
   const container = el.closest('.panel');
   if (!container) return;
   
-  // Reset inline font-size to allow CSS to take over
-  el.style.fontSize = ''; 
-  
-  // Check if text overflows the panel max-height
-  const maxPanelHeight = window.innerHeight * 0.75; 
-  const textHeight = el.scrollHeight + 100; // 100 for padding
+  el.style.fontSize = ''; // Reset
+  const maxPanelHeight = window.innerHeight * 0.7; 
+  const textHeight = el.scrollHeight + 100;
   
   if (textHeight > maxPanelHeight) {
     let currentSize = parseFloat(window.getComputedStyle(el).fontSize);
-    const minSize = 12; // absolute minimum px
+    const minSize = 12;
     
     while (el.scrollHeight + 100 > maxPanelHeight && currentSize > minSize) {
       currentSize -= 1;
@@ -977,10 +963,22 @@ async function shareWish() {
 }
 $('#shareBtn').addEventListener('click', (e) => { e.stopPropagation(); shareWish(); });
 
+// New Local QR Code Generator
 $('#qrBtn').addEventListener('click', (e) => {
   e.stopPropagation();
-  const url = encodeURIComponent(location.href);
-  $('#qrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${url}`;
+  const container = $('#qrContainer');
+  container.innerHTML = ''; // Clear previous
+  
+  // Generate QR using the library
+  new QRCode(container, {
+    text: location.href,
+    width: 250,
+    height: 250,
+    colorDark : "#000000",
+    colorLight : "#ffffff",
+    correctLevel : QRCode.CorrectLevel.L // Low error correction allows bigger text
+  });
+  
   $('#qrModal').classList.add('show');
 });
 $('#closeQrBtn').addEventListener('click', (e) => { e.stopPropagation(); $('#qrModal').classList.remove('show'); });
