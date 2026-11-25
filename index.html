@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Ultimate Birthday Experience</title>
+<title> @surajprocreater Birthday Experience</title>
 <meta name="theme-color" content="#050508" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,17 +16,17 @@
   --bg-base: #050508;
   --card: rgba(10, 10, 15, 0.5);
   --card-hover: rgba(255, 255, 255, 0.05);
-  
+
   --border: rgba(255, 255, 255, 0.08);
   --border-glow: rgba(56, 189, 248, 0.4);
-  
-  --accent: #38bdf8;            /* Sky Blue */
+
+  --accent: #38bdf8;
   --accent-glow: rgba(56, 189, 248, 0.4);
-  --primary: #10b981;           /* Emerald Green */
+  --primary: #10b981;
   --primary-glow: rgba(16, 185, 129, 0.4);
-  
-  --text-main: #38bdf8;         /* Forced Sky Blue for all main text */
-  --text-muted: #38bdf8;        /* Forced Sky Blue for all muted text */
+
+  --text-main: #38bdf8;
+  --text-muted: #38bdf8;
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   --bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -38,7 +38,7 @@
 html, body { height: 100%; }
 body {
   background-color: var(--bg-base);
-  color: var(--accent); /* Default to sky blue */
+  color: var(--accent);
   font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
@@ -49,7 +49,6 @@ body {
 }
 .serif { font-family: 'Playfair Display', Georgia, serif; }
 
-/* Global Sky Blue Text Style */
 .text-sky {
   color: var(--accent) !important;
   text-shadow: 0 0 20px var(--accent-glow);
@@ -75,14 +74,14 @@ body {
   padding: 56px 48px;
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
-  box-shadow: 
+  box-shadow:
     0 24px 48px -12px rgba(0, 0, 0, 0.8),
     0 0 50px var(--primary-glow),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
   border-color: rgba(16, 185, 129, 0.5);
   position: relative;
   width: 100%;
-  max-width: 720px; /* Increased width slightly for better text fit */
+  max-width: 720px;
   z-index: 10;
   transform-style: preserve-3d;
   transition: transform 0.2s ease-out, box-shadow 0.3s var(--ease);
@@ -108,12 +107,12 @@ input[type="text"] {
   width: 100%; padding: 20px 24px;
   background: rgba(0, 0, 0, 0.6);
   border: 1px solid var(--border); border-radius: 12px;
-  color: var(--accent); /* Sky blue input text */
+  color: var(--accent);
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 18px; text-align: center; outline: none;
   transition: all 0.4s var(--ease);
 }
-input[type="text"]::placeholder { color: rgba(56, 189, 248, 0.5); } /* Sky blue placeholder */
+input[type="text"]::placeholder { color: rgba(56, 189, 248, 0.5); }
 input[type="text"]:focus {
   border-color: var(--accent);
   background: rgba(56, 189, 248, 0.05);
@@ -146,29 +145,27 @@ input[type="text"]:focus {
 .btn-ghost:hover { background: var(--card-hover); border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
 
 /* ============================================================
-   TYPOGRAPHY & TEXT-IN ANIMATION
+   TYPOGRAPHY
    ============================================================ */
 .heading-lg {
   font-family: 'Playfair Display', serif;
   font-size: clamp(2.6rem, 5vw, 4rem);
   font-weight: 600; line-height: 1.15;
   letter-spacing: -0.02em; margin-bottom: 24px;
-  color: var(--accent); /* Sky Blue */
+  color: var(--accent);
   text-shadow: 0 0 30px var(--accent-glow);
 }
 
-/* The Wish Message (All Sky Blue, fixed cutting) */
 .wish-message {
   font-family: 'Playfair Display', serif;
   font-size: clamp(1.5rem, 4vw, 2.4rem);
   font-style: italic;
-  line-height: 1.7; /* Increased for no cutting */
+  line-height: 1.7;
   color: var(--accent);
   text-shadow: 0 0 20px var(--accent-glow);
   text-align: center;
-  padding-bottom: 8px; /* Extra safety against cutting */
+  padding-bottom: 8px;
 }
-
 .wish-message .hindi {
   display: block;
   font-family: 'Plus Jakarta Sans', sans-serif;
@@ -181,7 +178,6 @@ input[type="text"]:focus {
   text-shadow: 0 0 15px var(--accent-glow);
 }
 
-/* Text-In Animation */
 .text-anim {
   opacity: 0;
   transform: translateY(30px) scale(0.95);
@@ -192,6 +188,10 @@ input[type="text"]:focus {
 }
 @keyframes textIn {
   to { opacity: 1; transform: none; filter: blur(0); }
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* ============================================================
@@ -204,24 +204,21 @@ input[type="text"]:focus {
 .screen {
   position: absolute; inset: 0;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 32px 24px; text-align: center;
+  padding: 80px 24px 32px; /* Top padding increased to avoid overlap with top profile pic */
+  text-align: center;
   opacity: 0; visibility: hidden;
   transition: opacity 0.6s var(--ease), visibility 0.6s var(--ease);
   pointer-events: none;
 }
 .screen.on { opacity: 1; visibility: visible; pointer-events: auto; }
-
-/* Panel Entry Animation */
-.screen.on .panel {
-  animation: panelIn 1s var(--bounce) forwards;
-}
+.screen.on .panel { animation: panelIn 1s var(--bounce) forwards; }
 @keyframes panelIn {
   from { opacity: 0; transform: translateY(40px) scale(0.9) rotateX(10deg); }
   to { opacity: 1; transform: none; }
 }
 
 /* ============================================================
-   3D PLANT / FLOWER GROWTH ANIMATIONS (SVG)
+   PLANT ANIMATIONS
    ============================================================ */
 .plant-container {
   position: absolute; z-index: 2; pointer-events: none;
@@ -240,25 +237,11 @@ input[type="text"]:focus {
   60% { transform: scale(1.2) rotate(10deg); opacity: 1; }
   100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
-
-.plant-svg path.vine {
-  stroke-dasharray: 200;
-  stroke-dashoffset: 200;
-}
-.screen.on .plant-svg path.vine {
-  animation: growVine 2.5s var(--ease) forwards;
-}
-.plant-svg .petal, .plant-svg .leaf {
-  transform-origin: center;
-  transform: scale(0);
-}
-.screen.on .plant-svg .petal {
-  animation: bloomPetal 1.8s var(--bounce) forwards;
-}
-.screen.on .plant-svg .leaf {
-  animation: bloomPetal 2s var(--ease) forwards;
-}
-
+.plant-svg path.vine { stroke-dasharray: 200; stroke-dashoffset: 200; }
+.screen.on .plant-svg path.vine { animation: growVine 2.5s var(--ease) forwards; }
+.plant-svg .petal, .plant-svg .leaf { transform-origin: center; transform: scale(0); }
+.screen.on .plant-svg .petal { animation: bloomPetal 1.8s var(--bounce) forwards; }
+.screen.on .plant-svg .leaf { animation: bloomPetal 2s var(--ease) forwards; }
 .screen.on .plant-svg .petal:nth-child(1) { animation-delay: 0.2s; }
 .screen.on .plant-svg .petal:nth-child(2) { animation-delay: 0.4s; }
 .screen.on .plant-svg .petal:nth-child(3) { animation-delay: 0.6s; }
@@ -326,6 +309,19 @@ input[type="text"]:focus {
 }
 .sound-btn:hover { border-color: var(--primary); background: rgba(16,185,129,0.1); box-shadow: 0 0 20px var(--primary-glow); transform: scale(1.1); }
 
+.back-btn {
+  position: fixed; top: 24px; left: 24px; z-index: 50;
+  width: 48px; height: 48px;
+  border: 1px solid var(--border); background: var(--card);
+  backdrop-filter: blur(10px); border-radius: 50%; color: var(--accent);
+  font-size: 22px; line-height: 1; cursor: pointer; display: grid; place-items: center;
+  transition: all 0.3s var(--ease);
+  opacity: 0; pointer-events: none;
+  font-family: inherit;
+}
+.back-btn.visible { opacity: 1; pointer-events: auto; }
+.back-btn:hover { border-color: var(--accent); background: rgba(56,189,248,0.1); box-shadow: 0 0 20px var(--accent-glow); transform: scale(1.1); }
+
 .toast {
   position: fixed; left: 50%; bottom: 48px; z-index: 200;
   transform: translate(-50%, 24px);
@@ -337,26 +333,209 @@ input[type="text"]:focus {
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
+/* ============================================================
+   PERSISTENT PROFILE CIRCLE (FIXED TOP CENTER)
+   ============================================================ */
+.persistent-profile {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 64px;
+  height: 64px;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease);
+}
+.persistent-profile.visible { opacity: 1; }
+.pp-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgba(56,189,248,0.08);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 24px var(--accent-glow), 0 0 0 2px var(--accent);
+  position: relative;
+  transition: transform 0.5s var(--bounce);
+  transform: scale(0.6);
+}
+.persistent-profile.visible .pp-inner { transform: scale(1); }
+.pp-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.pp-inner .ph-icon {
+  width: 45%;
+  height: 45%;
+  color: var(--accent);
+  opacity: 0.5;
+}
+
+/* ============================================================
+   PROFILE PHOTO UPLOAD (creator screen)
+   ============================================================ */
+.photo-upload-row { display: flex; justify-content: center; }
+.photo-preview-circle {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 2px dashed rgba(56, 189, 248, 0.4);
+  background: rgba(56, 189, 248, 0.05);
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  display: grid;
+  place-items: center;
+  transition: all 0.3s var(--ease);
+}
+.photo-preview-circle:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px var(--accent-glow);
+  transform: scale(1.05);
+}
+.photo-preview-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.photo-placeholder {
+  color: var(--accent);
+  font-size: 22px;
+  text-align: center;
+  line-height: 1.2;
+  pointer-events: none;
+}
+.photo-placeholder small { font-size: 10px; opacity: 0.7; font-weight: 500; letter-spacing: 0.05em; }
+
+/* ============================================================
+   ADJUST MODAL
+   ============================================================ */
+.adjust-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s var(--ease);
+}
+.adjust-overlay.show { opacity: 1; visibility: visible; }
+.adjust-panel {
+  background: var(--card);
+  border: 1px solid var(--border-glow);
+  border-radius: 24px;
+  padding: 28px 24px;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.8), 0 0 50px var(--accent-glow);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+}
+.adjust-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  color: var(--accent);
+  text-shadow: 0 0 20px var(--accent-glow);
+}
+.adjust-hint {
+  font-size: 12px;
+  color: var(--accent);
+  opacity: 0.7;
+  margin-top: -10px;
+  text-align: center;
+}
+.adjust-circle-wrap {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 30px var(--accent-glow);
+  position: relative;
+  touch-action: none;
+  background: #0a0a0f;
+}
+.adjust-canvas { width: 100%; height: 100%; display: block; cursor: grab; touch-action: none; }
+.adjust-canvas:active { cursor: grabbing; }
+.zoom-slider { width: 100%; accent-color: var(--accent); height: 6px; cursor: pointer; }
+.adjust-actions { display: flex; gap: 12px; width: 100%; }
+.adjust-actions button { flex: 1; padding: 14px 20px; font-size: 14px; }
+
+.adjust-dpad {
+  display: grid;
+  grid-template-columns: 42px 42px 42px;
+  grid-template-rows: 42px 42px 42px;
+  gap: 6px;
+  place-items: center;
+}
+.adjust-dpad [data-dir="up"]    { grid-column: 2; grid-row: 1; }
+.adjust-dpad [data-dir="left"]  { grid-column: 1; grid-row: 2; }
+.adjust-dpad [data-dir="right"] { grid-column: 3; grid-row: 2; }
+.adjust-dpad [data-dir="down"]  { grid-column: 2; grid-row: 3; }
+.arrow-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(56,189,248,0.05);
+  color: var(--accent);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-family: inherit;
+  transition: all 0.18s var(--ease);
+}
+.arrow-btn:hover {
+  background: rgba(56,189,248,0.18);
+  border-color: var(--accent);
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+.arrow-btn:active { transform: scale(0.93); }
+
 @media (max-width: 480px) {
   .panel { padding: 40px 24px; }
   .name-display { font-size: 4rem; }
   .wish-message { font-size: 1.3rem; }
   .wish-message .hindi { font-size: 0.85em; margin-top: 16px; }
   .plant-container { width: 140px; height: 140px; }
+  .adjust-circle-wrap { width: 180px; height: 180px; }
+  .adjust-panel { padding: 20px 16px; }
 }
 </style>
 </head>
 <body>
 
-<!-- ============================================================
-     BACKGROUND CANVAS LAYERS (Rotates every step)
-     ============================================================ -->
+<!-- Backgrounds -->
 <canvas id="bg-heart" class="bg-canvas"></canvas>
 <canvas id="bg-const" class="bg-canvas"></canvas>
 <canvas id="bg-jelly" class="bg-canvas"></canvas>
 <canvas id="bg-fx" class="bg-canvas"></canvas>
 
 <button class="sound-btn" id="soundBtn" aria-label="Toggle sound">🔊</button>
+<button class="back-btn" id="backBtn" aria-label="Go back">←</button>
+
+<!-- Persistent Profile Circle (Top Center) -->
+<div class="persistent-profile" id="persistentProfile">
+  <div class="pp-inner" id="ppInner">
+    <svg class="ph-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="8" r="4"/>
+      <path d="M4 20c0-4 4-6 8-6s8 2 8 6"/>
+    </svg>
+  </div>
+</div>
 
 <main class="stage" id="stage">
 
@@ -366,12 +545,17 @@ input[type="text"]:focus {
       <h1 class="heading-lg text-anim">
         Make someone's day<br><span class="text-sky">unforgettable</span>
       </h1>
-      <p class="text-anim" style="font-size: 16px; color: var(--accent); animation-delay: 0.3s; text-shadow: 0 0 15px var(--accent-glow);">
-        
-      </p>
-      
+      <p class="text-anim" style="font-size: 16px; color: var(--accent); animation-delay: 0.3s; text-shadow: 0 0 15px var(--accent-glow);"></p>
+
       <form id="createForm" autocomplete="off" class="text-anim" style="animation-delay: 0.5s;">
         <div class="input-group">
+          <div class="photo-upload-row">
+            <div class="photo-preview-circle" id="photoPreviewCircle" title="Add a profile photo">
+              <img id="photoPreviewImg" style="display:none;" alt="">
+              <span id="photoPreviewPlaceholder" class="photo-placeholder">📷<br><small>Add Photo</small></span>
+            </div>
+            <input type="file" id="photoInput" accept="image/*" style="display:none;">
+          </div>
           <input id="nameInput" type="text" placeholder="Enter name...@surajprocreater" maxlength="20" spellcheck="false" />
           <button type="submit" class="btn-primary">Create Magic ✨</button>
         </div>
@@ -382,8 +566,10 @@ input[type="text"]:focus {
   <!-- 1 · INTRO -->
   <section class="screen" id="step1">
     <div class="monogram-wrap text-anim" style="position:relative;width:140px;height:140px;display:grid;place-items:center;margin-bottom:48px;">
-      <div style="position:absolute;inset:0;border:1px solid var(--border);border-radius:50%;animation:spin 20s linear infinite;"></div>
-      <div style="font-size:40px;color:var(--accent);filter:drop-shadow(0 0 16px var(--accent-glow));">surajprocreter</div>
+      <div style="position:absolute;inset:0;border:1px solid var(--border-glow);border-radius:50%;animation:spin 20s linear infinite;"></div>
+      <svg viewBox="0 0 24 24" width="52" height="52" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 16px var(--accent-glow));">
+        <path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.65A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/>
+      </svg>
     </div>
     <h2 class="serif text-anim" style="font-size: 2.4rem; color: var(--accent); line-height: 1.4; text-shadow: 0 2px 20px var(--accent-glow); animation-delay: 0.3s;">
       Someone truly special<br>turns a year wiser today.
@@ -424,8 +610,8 @@ input[type="text"]:focus {
     </div>
     <div class="panel">
       <h2 class="wish-message text-anim">
-        "On this day, the universe quietly gave the world a gift — <span class="text-sky">you</span>."
-        <span class="hindi">"आज के दिन, ब्रह्मांड ने चुपचाप दुनिया को एक उपहार दिया — <span class="text-sky">आप</span>।"</span>
+        "on This Beautiful Day,May your birthday be as bright as your smile and as beautiful as your heart — <span class="text-sky">you</span>."
+        <span class="hindi">"आपका जन्मदिन आपकी मुस्कान की तरह उज्ज्वल और आपके दिल की तरह सुंदर हो <span class="text-sky">आप</span>।"</span>
       </h2>
     </div>
   </section>
@@ -457,8 +643,8 @@ input[type="text"]:focus {
     </div>
     <div class="panel">
       <h2 class="wish-message text-anim">
-        "You have a rare kind of magic. The kind that makes everything around you <span class="text-sky">brighter</span>."
-        <span class="hindi">"आपके पास एक दुर्लभ जादू है। ऐसा जादू जो आपके आस-पास की हर चीज़ को <span class="text-sky">रोशन</span> कर देता है।"</span>
+        "The sweetest part of a birthday isn't the gifts. It's knowing that someone stayed up until 12 a.m. to make you feel special first.</span>."
+        <span class="hindi">"जन्मदिन का सबसे प्यारा हिस्सा तोहफ़े नहीं हैं। यह जानना है कि कोई आपको सबसे पहले खास महसूस कराने के लिए रात 12 बजे तक जागता रहा। "</span>
       </h2>
     </div>
   </section>
@@ -472,8 +658,8 @@ input[type="text"]:focus {
     </div>
     <div class="panel">
       <h2 class="wish-message text-anim">
-        "Wishing you moments worth remembering forever, and a year that exceeds every <span class="text-sky">expectation</span>."
-        <span class="hindi">"आपको हमेशा याद रखने वाले पलों की शुभकामनाएं, और एक ऐसा साल जो हर <span class="text-sky">उम्मीद</span> से बढ़कर हो।"</span>
+        "Another year has passed... I've met some people, and I've left some memories. I just hope the next journey is even better. Happy birthday to my friend.</span>."
+        <span class="hindi">"एक और साल गुज़र गया... कुछ लोग मिले, कुछ यादें रह गईं। बस दुआ है, अगला सफ़र और बेहतर हो। मेरे दोस्त को जन्मदिन की बधाई"</span>
       </h2>
     </div>
   </section>
@@ -488,8 +674,8 @@ input[type="text"]:focus {
     </div>
     <div class="panel">
       <h2 class="wish-message text-anim">
-        "Keep shining, keep dreaming, and keep being the incredible person you are. The world needs your <span class="text-sky">light</span>."
-        <span class="hindi">"चमकते रहें, सपने देखते रहें, और वही अद्भुत इंसान बने रहें जो आप हैं। दुनिया को आपकी <span class="text-sky">रोशनी</span> की ज़रूरत है।"</span>
+        "Everything is beautiful, depending on the situation. The school bell sounds annoying at 9 a.m., but the same bell sounds melodious at 4 p.m.</span>."
+        <span class="hindi">"सब कुछ सुंदर है, यह स्थिति पर निर्भर करता है। स्कूल की घंटी सुबह 9 बजे परेशान करने वाली लगती है, लेकिन वही घंटी शाम 4 बजे सुरीली लगती है।"</span>
       </h2>
     </div>
   </section>
@@ -498,8 +684,8 @@ input[type="text"]:focus {
   <section class="screen" id="step9">
     <div class="panel">
       <h2 class="wish-message text-anim">
-        "May the coming year bring you closer to everything you've ever wanted and more than you ever <span class="text-sky">imagined</span>."
-        <span class="hindi">"आने वाला साल आपको आपकी हर चाहत के करीब ले जाए, और आपने जो सोचा भी नहीं हो वो सब <span class="text-sky">मिले</span>।"</span>
+        "You don't have to be perfect in everyone's lives. Just be the best version of yourself.</span>."
+        <span class="hindi">"आपको हर किसी की ज़िंदगी में परफेक्ट होने की ज़रूरत नहीं है। बस खुद का बेस्ट वर्ज़न बनें"</span>
       </h2>
     </div>
   </section>
@@ -514,8 +700,8 @@ input[type="text"]:focus {
     </div>
     <div class="panel">
       <h2 class="wish-message text-anim">
-        "Here's to new adventures, bold decisions, and the beautiful chaos of <span class="text-sky">life</span>."
-        <span class="hindi">"नए रोमांच, साहसिक फैसलों, और ज़िंदगी की खूबसूरत उथल-पुथल के लिए — <span class="text-sky">चीयर्स!</span>"</span>
+        "Never get too attached to anyone unless they feel the same way about you, because unrequited expectations can destroy you mentally.</span>."
+        <span class="hindi">"कभी भी किसी से बहुत ज़्यादा अटैच न हों, जब तक कि वे भी आपके लिए ऐसा ही महसूस न करें। क्योंकि एकतरफ़ा उम्मीदें आपको मानसिक रूप से बर्बाद कर सकती हैं।"</span>
       </h2>
     </div>
   </section>
@@ -524,8 +710,8 @@ input[type="text"]:focus {
   <section class="screen" id="step11">
     <div class="panel">
       <h2 class="wish-message text-anim">
-        "You inspire everyone around you without even trying. Today, we celebrate the masterpiece that is <span class="text-sky">you</span>."
-        <span class="hindi">"आप बिना कोशिश किए भी अपने आस-पास के हर इंसान को प्रेरित करते हैं। आज हम उस कलाकृति का जश्न मनाते हैं जो <span class="text-sky">आप</span> हैं।"</span>
+        "Never look for your happiness in others; it will make you feel lonely. Find it within yourself. You will feel happy even when you are alone.</span>."
+        <span class="hindi">"अपनी खुशी कभी दूसरों में मत ढूंढो, इससे तुम अकेला महसूस करोगे। इसे अपने अंदर ढूंढो। तुम अकेले होने पर भी खुश महसूस करोगे।"</span>
       </h2>
     </div>
   </section>
@@ -539,8 +725,8 @@ input[type="text"]:focus {
     </div>
     <div class="panel">
       <h2 class="wish-message text-anim">
-        "May your cup always be full, your heart always be light, and your path always be <span class="text-sky">clear</span>."
-        <span class="hindi">"आपका प्याला हमेशा भरा रहे, आपका दिल हमेशा हल्का रहे, और आपका रास्ता हमेशा <span class="text-sky">साफ</span> रहे।"</span>
+        "Enjoy life, because we will never return to this world again</span>."
+        <span class="hindi">"जीवन का आनंद लें, क्योंकि हम इस दुनिया में फिर कभी वापस नहीं आएंगे।"</span>
       </h2>
     </div>
   </section>
@@ -549,8 +735,8 @@ input[type="text"]:focus {
   <section class="screen" id="step13">
     <div class="panel">
       <h2 class="wish-message text-anim">
-        "Another year older, another year bolder, another year of being absolutely <span class="text-sky">extraordinary</span>."
-        <span class="hindi">"एक और साल बड़े, एक और साल बेहतर, और एक और साल बिल्कुल <span class="text-sky">असाधारण</span> होने का।"</span>
+        "Never complain about the difficulties in life, because a director (God) always gives the most difficult roles to his best actors.</span>."
+        <span class="hindi">"ज़िंदगी में मुश्किलों की कभी शिकायत मत करना, क्योंकि एक डायरेक्टर (भगवान) हमेशा अपने सबसे अच्छे एक्टर को ही सबसे मुश्किल रोल देता है।"</span>
       </h2>
     </div>
   </section>
@@ -566,8 +752,8 @@ input[type="text"]:focus {
     </div>
     <div class="panel">
       <h2 class="wish-message text-anim">
-        "May you find joy in the little things, strength in the hard times, and magic in the <span class="text-sky">everyday</span>."
-        <span class="hindi">"आपको छोटी-छोटी चीज़ों में खुशी मिले, मुश्किल वक्त में ताकत मिले, और रोज़मर्रा की ज़िंदगी में <span class="text-sky">जादू</span> मिले।"</span>
+        "Everything passes, but not everything can be forgotten.</span>."
+        <span class="hindi">"सब कुछ बीत जाता है, लेकिन सब कुछ भुलाया नहीं जा सकता।"</span>
       </h2>
     </div>
   </section>
@@ -618,8 +804,8 @@ input[type="text"]:focus {
     </div>
     <div class="panel">
       <h2 class="wish-message text-anim">
-        "The world is a better place because you are in it. Thank you for simply <span class="text-sky">existing</span>."
-        <span class="hindi">"दुनिया एक बेहतर जगह है क्योंकि आप इसमें हैं। बस आपके होने के लिए <span class="text-sky">धन्यवाद</span>।"</span>
+        "Life is better if you don't expect anything from others.</span>."
+        <span class="hindi">"अगर आप दूसरों से कोई उम्मीद नहीं रखते तो ज़िंदगी बेहतर होती है।"</span>
       </h2>
     </div>
   </section>
@@ -628,8 +814,8 @@ input[type="text"]:focus {
   <section class="screen" id="step19">
     <div class="panel">
       <h2 class="wish-message text-anim">
-        "This is your year. The year you step into your power and truly shine. <span class="text-sky">Believe it</span>."
-        <span class="hindi">"यह आपका साल है। वो साल जब आप अपनी ताकत को पहचानेंगे और सच में <span class="text-sky">चमकेंगे</span>। इस पर यकीन कीजिए।"</span>
+        "Life is full of problems... Problems are not permanent, life is limited, so face the problems with confidence and enjoy every moment of your life.</span>."
+        <span class="hindi">"ज़िंदगी प्रॉब्लम से भरी है... प्रॉब्लम परमानेंट नहीं होती, ज़िंदगी लिमिटेड है इसलिए प्रॉब्लम का कॉन्फिडेंस के साथ सामना करें और अपनी ज़िंदगी के हर पल को एन्जॉय करें।"</span>
       </h2>
     </div>
   </section>
@@ -656,7 +842,6 @@ input[type="text"]:focus {
         Happy Birthday. Have the most incredible year of your life.
         <span class="hindi">जन्मदिन मुबारक हो। आपके जीवन का सबसे शानदार साल हो।</span>
       </p>
-      
       <div class="actions text-anim" style="animation-delay: 0.5s; display: flex; flex-direction: column; gap: 16px;">
         <button class="btn-primary" id="shareBtn">Share this wish 🔗</button>
         <button class="btn-ghost" id="againBtn">Compose another ✨</button>
@@ -665,6 +850,31 @@ input[type="text"]:focus {
   </section>
 
 </main>
+
+<!-- Adjust Modal -->
+<div class="adjust-overlay" id="adjustModal">
+  <div class="adjust-panel">
+    <h3 class="adjust-title">Adjust Your Photo</h3>
+    <p class="adjust-hint">Drag to move · Slide to zoom · Arrows to nudge</p>
+    <div class="adjust-circle-wrap">
+      <canvas id="adjustCanvas" class="adjust-canvas"></canvas>
+    </div>
+
+    <div class="adjust-dpad">
+      <button type="button" class="arrow-btn" data-dir="up"    aria-label="Move up">↑</button>
+      <button type="button" class="arrow-btn" data-dir="left"  aria-label="Move left">←</button>
+      <button type="button" class="arrow-btn" data-dir="right" aria-label="Move right">→</button>
+      <button type="button" class="arrow-btn" data-dir="down"  aria-label="Move down">↓</button>
+    </div>
+
+    <input type="range" id="zoomSlider" class="zoom-slider" min="1" max="3" step="0.01" value="1">
+
+    <div class="adjust-actions">
+      <button type="button" class="btn-ghost" id="cancelAdjust">Cancel</button>
+      <button type="button" class="btn-primary" id="saveAdjust">Use Photo</button>
+    </div>
+  </div>
+</div>
 
 <div class="toast" id="toast"></div>
 
@@ -676,12 +886,11 @@ const wait  = (ms) => new Promise((r) => setTimeout(r, ms));
 const pick  = (a) => a[(Math.random() * a.length) | 0];
 
 /* ============================================================
-   BACKGROUND ANIMATION ENGINE (Rotates 4 styles)
+   BACKGROUND ANIMATION ENGINE
    ============================================================ */
 const bgCanvasIds = ['bg-heart', 'bg-const', 'bg-jelly', 'bg-fx'];
 let bgAnimations = {};
 
-// 1. Heart Animation
 bgAnimations['bg-heart'] = function() {
   const canvas = document.getElementById("bg-heart");
   const ctx = canvas.getContext("2d");
@@ -726,7 +935,6 @@ bgAnimations['bg-heart'] = function() {
   return () => cancelAnimationFrame(animId);
 };
 
-// 2. Constellation Web
 bgAnimations['bg-const'] = function() {
   const canvas = document.getElementById("bg-const");
   const ctx = canvas.getContext("2d");
@@ -750,7 +958,6 @@ bgAnimations['bg-const'] = function() {
   return () => cancelAnimationFrame(animId);
 };
 
-// 3. Bioluminescent Jelly Glow
 bgAnimations['bg-jelly'] = function() {
   const canvas = document.getElementById("bg-jelly");
   const ctx = canvas.getContext("2d");
@@ -772,7 +979,6 @@ bgAnimations['bg-jelly'] = function() {
   return () => cancelAnimationFrame(animId);
 };
 
-// 4. Particle Explosion (Original)
 bgAnimations['bg-fx'] = function() {
   const canvas = $('#bg-fx');
   const ctx = canvas.getContext('2d');
@@ -803,7 +1009,6 @@ bgAnimations['bg-fx'] = function() {
     }
   }
   window.burstParticles = burst;
-  
   function frame() {
     ctx.clearRect(0, 0, W, H);
     for (let i = particles.length - 1; i >= 0; i--) {
@@ -885,6 +1090,181 @@ $('#soundBtn').addEventListener('click', (e) => {
 });
 
 /* ============================================================
+   PROFILE PHOTO — STATE + PERSISTENT CIRCLE
+   ============================================================ */
+let currentPhoto = null;
+
+const adjustState = {
+  img: null,
+  baseScale: 1,
+  userScale: 1,
+  offsetX: 0,
+  offsetY: 0,
+};
+const ADJUST_SIZE = 400;
+const PROFILE_FALLBACK = `<svg class="ph-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>`;
+
+function updatePersistentProfile(photoUrl) {
+  const el = $('#ppInner');
+  if (!el) return;
+  if (photoUrl) {
+    el.innerHTML = `<img src="${photoUrl}" alt="Profile">`;
+  } else {
+    el.innerHTML = PROFILE_FALLBACK;
+  }
+}
+
+function drawAdjustPreview() {
+  const canvas = $('#adjustCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = ADJUST_SIZE;
+  canvas.height = ADJUST_SIZE;
+  ctx.clearRect(0, 0, ADJUST_SIZE, ADJUST_SIZE);
+  ctx.fillStyle = '#0a0a0f';
+  ctx.fillRect(0, 0, ADJUST_SIZE, ADJUST_SIZE);
+
+  const img = adjustState.img;
+  if (!img) return;
+
+  const scale = adjustState.baseScale * adjustState.userScale;
+  const drawW = img.width * scale;
+  const drawH = img.height * scale;
+
+  const maxOffX = Math.max(0, (drawW - ADJUST_SIZE) / 2);
+  const maxOffY = Math.max(0, (drawH - ADJUST_SIZE) / 2);
+  adjustState.offsetX = Math.max(-maxOffX, Math.min(maxOffX, adjustState.offsetX));
+  adjustState.offsetY = Math.max(-maxOffY, Math.min(maxOffY, adjustState.offsetY));
+
+  const drawX = ADJUST_SIZE / 2 - drawW / 2 + adjustState.offsetX;
+  const drawY = ADJUST_SIZE / 2 - drawH / 2 + adjustState.offsetY;
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(ADJUST_SIZE / 2, ADJUST_SIZE / 2, ADJUST_SIZE / 2, 0, Math.PI * 2);
+  ctx.clip();
+  ctx.drawImage(img, drawX, drawY, drawW, drawH);
+  ctx.restore();
+}
+
+$('#photoPreviewCircle').addEventListener('click', (e) => {
+  e.stopPropagation();
+  $('#photoInput').click();
+});
+
+$('#photoInput').addEventListener('change', (e) => {
+  e.stopPropagation();
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) {
+    alert('Please select an image file.');
+    e.target.value = '';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const img = new Image();
+    img.onload = () => {
+      adjustState.img = img;
+      adjustState.baseScale = Math.max(ADJUST_SIZE / img.width, ADJUST_SIZE / img.height);
+      adjustState.userScale = 1;
+      adjustState.offsetX = 0;
+      adjustState.offsetY = 0;
+      $('#zoomSlider').value = 1;
+      drawAdjustPreview();
+      $('#adjustModal').classList.add('show');
+    };
+    img.onerror = () => alert('Could not load that image.');
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+});
+
+(function() {
+  const canvas = $('#adjustCanvas');
+  let dragging = false;
+  let startX = 0, startY = 0, startOffX = 0, startOffY = 0;
+
+  canvas.addEventListener('pointerdown', (e) => {
+    if (!adjustState.img) return;
+    dragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    startOffX = adjustState.offsetX;
+    startOffY = adjustState.offsetY;
+    try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+    e.preventDefault();
+  });
+
+  canvas.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const rect = canvas.getBoundingClientRect();
+    const sf = ADJUST_SIZE / rect.width;
+    adjustState.offsetX = startOffX + (e.clientX - startX) * sf;
+    adjustState.offsetY = startOffY + (e.clientY - startY) * sf;
+    drawAdjustPreview();
+    e.preventDefault();
+  });
+
+  const endDrag = (e) => {
+    if (!dragging) return;
+    dragging = false;
+    try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+  };
+  canvas.addEventListener('pointerup', endDrag);
+  canvas.addEventListener('pointercancel', endDrag);
+})();
+
+$('#zoomSlider').addEventListener('input', (e) => {
+  adjustState.userScale = parseFloat(e.target.value);
+  drawAdjustPreview();
+});
+
+document.querySelectorAll('.arrow-btn').forEach((btn) => {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (!adjustState.img) return;
+    const dir = btn.dataset.dir;
+    const step = 10;
+    if (dir === 'left')  adjustState.offsetX -= step;
+    if (dir === 'right') adjustState.offsetX += step;
+    if (dir === 'up')    adjustState.offsetY -= step;
+    if (dir === 'down')  adjustState.offsetY += step;
+    drawAdjustPreview();
+  });
+});
+
+$('#cancelAdjust').addEventListener('click', (e) => {
+  e.stopPropagation();
+  $('#adjustModal').classList.remove('show');
+});
+
+$('#saveAdjust').addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (!adjustState.img) return;
+  drawAdjustPreview();
+  const canvas = $('#adjustCanvas');
+  const dataUrl = canvas.toDataURL('image/png');
+  currentPhoto = dataUrl;
+
+  const previewImg = $('#photoPreviewImg');
+  previewImg.src = dataUrl;
+  previewImg.style.display = 'block';
+  $('#photoPreviewPlaceholder').style.display = 'none';
+
+  updatePersistentProfile(currentPhoto);
+
+  $('#adjustModal').classList.remove('show');
+});
+
+$('#adjustModal').addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (e.target === e.currentTarget) {
+    $('#adjustModal').classList.remove('show');
+  }
+});
+
+/* ============================================================
    THE 20-STEP TAP CONTROLLER
    ============================================================ */
 const SCREENS = [
@@ -899,6 +1279,8 @@ function show(id) {
   $$('.screen').forEach((s) => s.classList.toggle('on', s.id === id));
   const panel = document.querySelector(`#${id} .panel`);
   if (panel) panel.style.transform = '';
+  const pp = $('#persistentProfile');
+  if (pp) pp.classList.toggle('visible', id !== 'creator');
 }
 
 function revealName(name) {
@@ -922,16 +1304,54 @@ function blowCandles() {
     }, i * 100);
   });
 }
+function resetCandles() {
+  $$('.flame').forEach((f) => f.classList.remove('out'));
+}
+
+function updateBackBtn() {
+  const btn = $('#backBtn');
+  if (!btn) return;
+  btn.classList.toggle('visible', currentStepIndex >= 0);
+}
+
+function goBack(e) {
+  if (e) e.stopPropagation();
+  if (isTransitioning && currentStepIndex === 2) return;
+  if (currentStepIndex < 0) return;
+
+  if (currentStepIndex === 0) {
+    history.replaceState(null, '', location.pathname);
+    currentStepIndex = -1;
+    show('creator');
+    updateBackBtn();
+    setBackground(0);
+    playChime();
+    return;
+  }
+
+  currentStepIndex--;
+  const id = SCREENS[currentStepIndex];
+
+  if (id === 'step3') resetCandles();
+  if (id === 'step2') revealName(currentName);
+
+  show(id);
+  setBackground(currentStepIndex);
+  updateBackBtn();
+  playChime();
+}
+$('#backBtn').addEventListener('click', goBack);
 
 function nextStep(e) {
   if (isTransitioning) return;
   if (e && e.target.closest('button, input, a')) return;
-  if (currentStepIndex === -1) return; 
-  if (currentStepIndex >= SCREENS.length) return; 
+  if (currentStepIndex === -1) return;
+  if (currentStepIndex >= SCREENS.length) return;
+  if ($('#adjustModal').classList.contains('show')) return;
 
   if (e && window.burstParticles) {
-    const cx = e.clientX || W / 2;
-    const cy = e.clientY || H / 2;
+    const cx = e.clientX || window.innerWidth / 2;
+    const cy = e.clientY || window.innerHeight / 2;
     window.burstParticles(cx, cy, 40, 10);
   }
   playChime();
@@ -945,7 +1365,6 @@ function nextStep(e) {
     }, 1500);
     return;
   }
-
   advance();
 }
 
@@ -970,14 +1389,15 @@ function advance() {
         setTimeout(() => isTransitioning = false, 2500);
       }
       nextEl.classList.add('on');
-      
+      updateBackBtn();
+
       if (nextId === 'step20') {
         $('#finalName').textContent = currentName;
         setTimeout(() => {
           if (window.burstParticles) {
-            window.burstParticles(W/2, H/2, 150, 18);
-            setTimeout(() => window.burstParticles(W*0.2, H*0.4, 80, 12), 300);
-            setTimeout(() => window.burstParticles(W*0.8, H*0.4, 80, 12), 600);
+            window.burstParticles(window.innerWidth/2, window.innerHeight/2, 150, 18);
+            setTimeout(() => window.burstParticles(window.innerWidth*0.2, window.innerHeight*0.4, 80, 12), 300);
+            setTimeout(() => window.burstParticles(window.innerWidth*0.8, window.innerHeight*0.4, 80, 12), 600);
           }
         }, 500);
       }
@@ -987,34 +1407,31 @@ function advance() {
 
 document.addEventListener('click', nextStep);
 
-/* ============================================================
-   FORM SUBMISSION
-   ============================================================ */
 $('#createForm').addEventListener('submit', (e) => {
   e.preventDefault();
   const input = $('#nameInput');
   const name = input.value.replace(/[<>]/g, '').trim().slice(0, 20);
   if (!name) {
-    input.style.borderColor = 'var(--danger)';
+    input.style.borderColor = '#ef4444';
     setTimeout(() => { input.style.borderColor = ''; }, 1500);
     return;
   }
-  
+
   ensureAudio();
   currentName = name;
   history.replaceState(null, '', '?name=' + encodeURIComponent(name));
-  
+
+  updatePersistentProfile(currentPhoto);
+
   $('#creator').classList.remove('on');
-  currentStepIndex = 0; 
-  setBackground(0); 
+  currentStepIndex = 0;
+  setBackground(0);
   show(SCREENS[0]);
-  
+  updateBackBtn();
+
   if (window.burstParticles) window.burstParticles(window.innerWidth/2, window.innerHeight/2, 100, 15);
 });
 
-/* ============================================================
-   SHARE / RESET
-   ============================================================ */
 function toast(msg) {
   const t = $('#toast');
   t.textContent = msg; t.classList.add('show');
@@ -1035,31 +1452,42 @@ async function shareWish() {
     window.prompt('Copy this link:', url);
   }
 }
-
 $('#shareBtn').addEventListener('click', (e) => { e.stopPropagation(); shareWish(); });
 
 $('#againBtn').addEventListener('click', (e) => {
   e.stopPropagation();
   history.replaceState(null, '', location.pathname);
   currentStepIndex = -1;
-  show('creator');
+  currentPhoto = null;
+
+  const previewImg = $('#photoPreviewImg');
+  previewImg.src = '';
+  previewImg.style.display = 'none';
+  $('#photoPreviewPlaceholder').style.display = 'block';
+
   $('#nameInput').value = '';
+  updatePersistentProfile(null);
+  resetCandles();
+
+  show('creator');
   setBackground(0);
+  updateBackBtn();
+  playChime();
 });
 
-/* ============================================================
-   BOOT
-   ============================================================ */
 (function boot() {
   setBackground(0);
+  updatePersistentProfile(null);
 
   const p = new URLSearchParams(location.search);
   const raw = (p.get('name') || '').replace(/[<>]/g, '').trim().slice(0, 20);
   if (raw) {
     currentName = raw;
+    updatePersistentProfile(currentPhoto);
     $('#creator').classList.remove('on');
     currentStepIndex = 0;
     show(SCREENS[0]);
+    updateBackBtn();
   }
 })();
 </script>
